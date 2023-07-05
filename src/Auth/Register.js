@@ -45,7 +45,7 @@ const Register = () => {
           <div className="welcome__msg py-4">
             <p className="m-0 text-grey text-uppercase">start for free :)</p>
             <h1>Sign up to get started</h1>
-            <p className="text-grey pop">
+            <p className="pop ">
               Already a member?{" "}
               <Link to="/login" className="fw-bold">
                 Log In

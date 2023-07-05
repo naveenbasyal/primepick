@@ -4,6 +4,7 @@ import "../Styles/Navbar.scss";
 import { Button } from "@material-ui/core";
 import { AccountCircle, ShoppingCart, Store } from "@material-ui/icons";
 
+
 const Navbar = () => {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState("");
@@ -19,9 +20,15 @@ const Navbar = () => {
   return (
     <div className="nav container-fluid">
       <div className="row">
-        <div className="col-md-3 logo">
-          <Link title="home" to="/">
-            <strong>PrimePick.</strong>
+        <div className="col-md-3 logo overflow-hidden">
+          <Link title="home" to="/" className="d-flex fw-bold pop">
+            <img
+              src='/logo.png'
+              style={{ width: "50px" }}
+              alt="logo"
+              className="img-fluid me-2"
+            />{" "}
+            prime pick
           </Link>
         </div>
         <div className="col-md-4 search">

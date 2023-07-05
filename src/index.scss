@@ -8,13 +8,16 @@
 body {
   background: #fff;
 }
+.alpha {
+  color: rgb(62 62 62)!important;
+}
 .centerall {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .pop {
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins", sans-serif!important;
 }
 .centerh {
   display: flex;
