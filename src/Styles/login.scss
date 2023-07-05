@@ -1,0 +1,37 @@
+.mail__icon {
+  margin-right: 10px;
+  color: grey!important;
+}
+.eye__icon {
+  margin-right: 10px;
+  color: rgb(136, 136, 136);
+  cursor: pointer;
+}
+.text-grey {
+  color: grey;
+  font-family: "Roboto", sans-serif;
+}
+.remember__me__checkbox {
+  accent-color: green;
+}
+.login__btn {
+  button {
+    font-weight: 500;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 40px;
+    border-color: #000;
+    // color: #09885e;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.92;
+    }
+  }
+  // coor of 1st button should be greeen
+
+}
+.register{
+  .welcome__msg{
+    font-size: 14px;
+  }
+}

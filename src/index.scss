@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Amaranth:wght@700&family=Mulish:wght@400;500&family=Rubik:wght@800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Amaranth:wght@700&family=Mulish:wght@400;500&family=Poppins&family=Rubik:wght@800&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: #fff;
+}
+.centerall {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pop {
+  font-family: "Poppins", sans-serif;
+}
+.centerh {
+  display: flex;
+  justify-content: center;
+}
+.centerv {
+  display: flex;
+  align-items: center;
+}
