@@ -4,6 +4,8 @@ import { useJwt } from "react-jwt";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import Lottie from "lottie-react";
+import VerifyEmailAnimation from "../assets/loading.json";
 const VerifyEmail = () => {
   const { token } = useParams();
   const { isExpired } = useJwt(token);
@@ -16,34 +18,36 @@ const VerifyEmail = () => {
       );
       console.log(res.data);
       toast.success(res.data.message);
-      navigate("/login");
+      // navigate("/login");
     } catch (error) {
       console.log(error.response.data);
       toast.error(error.response.data);
-      navigate("/login");
+      // navigate("/login");
     }
   };
   useEffect(() => {
     if (isExpired) {
       toast.error("Token Expired");
       alert("Token Expired");
-      navigate("/login");
+      // navigate("/login");
     } else {
       verifyEmail();
     }
   }, []);
 
   return (
-    <div className="container pop center" style={{ height: "70vh" }}>
-      <div className="dim fs-3 p-1 center ">
-        <RingLoader color="#5b4af1" size={100} />
-        <h3 className="my-4 ">
-          {" "}
-          Verifying Email{" "}
+    <div className="container pop centerall" style={{ height: "70vh" }}>
+      <div className="dim p-1 center ">
+        <Lottie
+          animationData={VerifyEmailAnimation}
+          className="verify centerall"
+        />
+        <p className="fs-5 centerall">
+          Verifying email&nbsp;
           <span>
-            <PulseLoader color="#5b4af1" size={7} />
+            <PulseLoader color="#000" size={6} />
           </span>
-        </h3>
+        </p>
       </div>
     </div>
   );
