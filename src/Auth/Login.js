@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Lottie from "lottie-react";
 import LoginAnimation from "../assets/login.json";
+import axios from "axios";
 import {
   Checkbox,
   InputAdornment,
@@ -16,12 +17,16 @@ import {
   MailOutline,
 } from "@mui/icons-material";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import { loginSchema } from "../validation/ValidationSchema";
+import getToken from "../utils/getToken";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
+  const token = getToken();
 
   const formik = useFormik({
     initialValues: {
@@ -30,14 +35,36 @@ const Login = () => {
     },
     validationSchema: loginSchema,
     onSubmit: (values) => {
-      handleLogin();
-      formik.resetForm();
+      handleLogin(values);
     },
   });
 
-  const handleLogin = () => {
-    console.log("login succesfully", formik.values);
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    } else {
+      navigate('/login');
+    }
+  }, [token, navigate]);
+
+  const handleLogin = async () => {
+    const { email, password } = formik.values;
+    const data = { email: email, password: password };
+    try {
+      const res = await axios.post(
+        "https://primepick.onrender.com/api/user/login",
+        data
+      );
+      console.log(res.data);
+
+      localStorage.setItem("primepick", res.data.token);
+      navigate("/");
+    } catch (err) {
+      console.log(err.response);
+      alert(err.response.data.msg);
+    }
   };
+
   return (
     <div className="login container">
       <div className="row justify-content-around">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Lottie from "lottie-react";
 import RegisterAnimation from "../assets/register.json";
+import axios from "axios";
 import {
   InputAdornment,
   TextField,
@@ -31,10 +32,27 @@ const Register = () => {
     },
     validationSchema: registerSchema,
     onSubmit: (values) => {
-      console.log("➡️ __ file: Register.js:46 __ values:", values);
-      formik.resetForm();
+      handleRegister(values);
     },
   });
+
+  const handleRegister = async (values) => {
+    const { username, email, password } = values;
+    const data = { name: username, email: email, password: password };
+    console.log(data);
+    try {
+      const res = await axios.post(
+        "https://primepick.onrender.com/api/user/register",
+        data
+      );
+      console.log(res.data);
+      alert(res.data.message);
+      formik.resetForm();
+    } catch (err) {
+      console.log(err.response.data.msg);
+      alert(err.response.data.msg);
+    }
+  };
   return (
     <div className="register container">
       <div className="row justify-content-around">

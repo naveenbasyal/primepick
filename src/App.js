@@ -7,6 +7,8 @@ import Home from "./Pages/Home";
 import Navbar from "./components/Navbar";
 import NotFound from "./components/NotFound";
 import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
+import VerifyEmail from "./Pages/VerifyEmail";
 
 const App = () => {
   return (
@@ -23,7 +25,13 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
 
         {/* ____Forgot Page____ */}
-          <Route path="/forgotpassword" element={<ForgotPassword/>}/>
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        {/* ____Reset Password Page____ */}
+        <Route path="/resetpassword" element={<ResetPassword />} />
+
+        {/* ____Verify Email____ */}
+        <Route path="/auth/verifyemail/:token" element={<VerifyEmail />} />
+
       </Routes>
     </>
   );
