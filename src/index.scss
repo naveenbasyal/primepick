@@ -6,9 +6,19 @@
   box-sizing: border-box;
 }
 @mixin color {
-  color: #360b0e;
+  color: #360b0e!important;
+}
+.MuiFormLabel-root.Mui-focused {
+  @include color;
 }
 
+.MuiInput-underline:after {
+  border-bottom: 2px solid #360b0e !important;
+}
+
+.MuiFilledInput-underline:after{
+  border-bottom: 2px solid #360b0e !important;
+}
 body {
   background: #fff;
 }

@@ -14,6 +14,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Cart from "./Pages/Cart";
 
 const App = () => {
+ 
   return (
     <>
       <Navbar />

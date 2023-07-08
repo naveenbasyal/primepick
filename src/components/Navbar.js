@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../Styles/Navbar.scss";
-import { Button } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
 import {
   AccountCircle,
   ShoppingCart,
@@ -17,11 +17,26 @@ import { Login } from "@mui/icons-material";
 const Navbar = () => {
   const location = useLocation();
   const token = getToken();
+  const searchRef = useRef(null);
   // States ---------------------->
   const [hamburOverlay, setHamBurOverlay] = useState(false);
   const [productOverlay, setProductOverlay] = useState(false);
   const [brandOverlay, setBrandOverlay] = useState(false);
-  const [activeLink, setActiveLink] = useState("");
+  const [searchVisible, setSearchVisible] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const toggleSearch = () => {
+    setSearchVisible(!searchVisible);
+    setHamBurOverlay(false);
+    setProductOverlay(false);
+    setBrandOverlay(false);
+  };
+
+  useEffect(() => {
+    if (searchVisible) {
+      searchRef.current.focus();
+    }
+  }, [searchVisible]);
+
   const [ImgSrc, setImgSrc] = useState([
     "/images/adidas.png",
     "/images/armani.png",
@@ -34,13 +49,10 @@ const Navbar = () => {
     "/images/levi.png",
   ]);
 
-  const handleActiveLink = (link) => {
-    setActiveLink(link);
-  };
-
   return (
     <header className="container-fluid header">
       <div className={`header-container row ${"position-relative "}`}>
+        {/* ___________LEFT LINK PART ___________ */}
         <div className="navPages-container col-lg-5 ">
           <nav className="navPages">
             <ul className="navPages-list d-flex">
@@ -244,6 +256,7 @@ const Navbar = () => {
             </ul>
           </nav>
         </div>
+        {/* ___________MIDDLE LOGO PART ___________ */}
         <div className="header-logo col-lg-3">
           <Link
             title="home"
@@ -264,14 +277,36 @@ const Navbar = () => {
             prime pick
           </Link>
         </div>
+        {/* ____________ RIGHT PART ___________ */}
         <nav className="navUser col-lg-4">
           <ul className="navUser-section d-flex">
             <li className="navUser-item">
-              <Link>
+              {searchVisible && (
+                <div className="search-bar">
+                  <TextField
+                    inputRef={searchRef}
+                    label="Search"
+                    variant="standard"
+                    className="search-input"
+                    size="small"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  />
+                </div>
+              )}
+              <Link onClick={toggleSearch}>
                 <Search />
               </Link>
             </li>
-            <li className="navUser-item">
+            <li
+              className="navUser-item"
+              onClick={() => {
+                setHamBurOverlay(false);
+                setProductOverlay(false);
+                setBrandOverlay(false);
+                localStorage.setItem("primepick-currentTab", "Personal Information")
+              }}
+            >
               <Link title="Account" className={`link `} to="/dashboard">
                 <AccountCircle />
               </Link>

@@ -1,7 +1,7 @@
 // _________________________________________________________
 
 @mixin color {
-  color: #360b0e;
+  color: #360b0e !important;
 }
 
 @mixin center {
@@ -74,8 +74,6 @@
     @include center;
   }
   .navUser {
-    // @include center;
-    // align-items: center;
     flex: 1;
     .navUser-section {
       float: right;
@@ -98,6 +96,7 @@
     top: 101%;
     left: 0;
     right: 0;
+    z-index: 1000;
     .hamburger-links {
       strong {
         font-size: 1.2rem;
@@ -151,6 +150,7 @@
     top: 101%;
     left: 0;
     right: 0;
+    z-index: 1000;
 
     .product-links {
       strong {
@@ -204,6 +204,8 @@
     top: 101%;
     left: 0;
     right: 0;
+    z-index: 1000;
+
     .overlay_wrapper {
       padding: 3rem 4rem !important;
     }

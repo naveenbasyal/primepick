@@ -61,8 +61,8 @@
       }
     }
   }
-  .bio {
-    .bio-header {
+  .name {
+    .name-header {
       position: relative;
       margin-bottom: 1rem;
       @include color;
@@ -71,6 +71,17 @@
         right: 1rem;
         color: red;
       }
+      h5 {
+        margin: 0;
+      }
+    }
+  }
+  .bio {
+    .bio-header {
+      position: relative;
+      margin-bottom: 1rem;
+      @include color;
+
       h5 {
         margin: 0;
       }
@@ -88,6 +99,40 @@
       }
       h5 {
         margin: 0;
+      }
+    }
+  }
+}
+.address-tab-content {
+  .address-list {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(3, 1fr) !important;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(1, 1fr) !important;
+    }
+
+    .address {
+      background-color: #e5e5e5;
+      padding: 1.2rem 2rem;
+      border-radius: 4px;
+    }
+    .new-address {
+      background-color: #fff !important;
+      border: 1px solid #360b0e;
+      display: grid;
+      font-size: 1.2rem;
+      place-items: center;
+      
+      grid-template-rows: auto;
+      grid-template-columns: 1fr !important;
+      svg{
+        font-size: 2rem;
       }
     }
   }

@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import Lottie from "lottie-react";
+
 import VerifyEmailAnimation from "../assets/loading.json";
 const VerifyEmail = () => {
   const { token } = useParams();
@@ -40,7 +41,7 @@ const VerifyEmail = () => {
       <div className="dim p-1 center ">
         <Lottie
           animationData={VerifyEmailAnimation}
-          className="verify centerall"
+        className="verify centerall"
         />
         <p className="fs-5 centerall">
           Verifying email&nbsp;
