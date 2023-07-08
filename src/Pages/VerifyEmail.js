@@ -18,11 +18,11 @@ const VerifyEmail = () => {
       );
       console.log(res.data);
       toast.success(res.data.message);
-      // navigate("/login");
+      navigate("/login");
     } catch (error) {
       console.log(error.response.data);
       toast.error(error.response.data);
-      // navigate("/login");
+      navigate("/login");
     }
   };
   useEffect(() => {

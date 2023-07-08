@@ -17,13 +17,15 @@ import {
   MailOutline,
 } from "@mui/icons-material";
 
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { loginSchema } from "../validation/ValidationSchema";
 import getToken from "../utils/getToken";
+import { Toaster, toast } from "react-hot-toast";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const token = getToken();
@@ -43,7 +45,7 @@ const Login = () => {
     if (token) {
       navigate("/");
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   }, [token, navigate]);
 
@@ -51,22 +53,25 @@ const Login = () => {
     const { email, password } = formik.values;
     const data = { email: email, password: password };
     try {
+      setLoading(true);
       const res = await axios.post(
         "https://primepick.onrender.com/api/user/login",
         data
       );
-      console.log(res.data);
 
-      localStorage.setItem("primepick", res.data.token);
+      localStorage.setItem("primepick", JSON.stringify(res.data.data.token));
+      setLoading(false);
       navigate("/");
     } catch (err) {
-      console.log(err.response);
-      alert(err.response.data.msg);
+      console.log(err.response.data.msg);
+      toast.error(err.response.data.msg);
+      setLoading(false);
     }
   };
 
   return (
     <div className="login container">
+      <Toaster />
       <div className="row justify-content-around">
         <div className="col-lg-5 col-sm-12 login-img ">
           <Lottie animationData={LoginAnimation} className="login__animation" />
@@ -168,8 +173,13 @@ const Login = () => {
               </div>
 
               <div className="login__btn my-5 d-flex ">
-                <Button variant="outlined" type="submit" className="ms-1 me-5">
-                  Login
+                <Button
+                  disabled={loading}
+                  variant="outlined"
+                  type="submit"
+                  className="ms-1 me-5"
+                >
+                  {loading ? "Loading..." : "Login"}
                 </Button>
                 <Link to="/register">
                   <Button variant="outlined">Sign Up</Button>

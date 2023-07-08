@@ -19,9 +19,7 @@ const loginSchema = Yup.object({
     .required("Email is required"),
 
   password: Yup.string()
-    .min(8, "password should be 8 char long")
-    .matches(/^(?=.*[0-9])/, "Password must contain a number")
-    .required("Password is required"),
+  .required("Password is required"),
 });
 
 export { registerSchema, loginSchema };

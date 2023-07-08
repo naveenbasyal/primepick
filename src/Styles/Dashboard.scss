@@ -1,0 +1,94 @@
+@mixin color {
+  color: #360b0e;
+}
+@mixin mulish {
+  font-family: "Mulish", sans-serif !important;
+}
+
+.dash-nav {
+  @include mulish;
+  background: #efefef;
+  padding: 0rem 2rem;
+  height: 75px;
+  .dash-nav-list {
+    height: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    li {
+      height: inherit;
+      display: flex;
+      align-items: center;
+      border-bottom: 5px solid transparent;
+      a {
+        @include color;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: bold;
+        &:hover {
+          color: #000;
+          text-decoration: none;
+        }
+      }
+      &:hover {
+        border-bottom-color: #360b0e;
+        cursor: pointer;
+      }
+    }
+    .dash-tab-active {
+      border-bottom-color: #360b0e;
+    }
+  }
+}
+
+.dash-tab-content {
+  @include mulish;
+  .name {
+    .name-header {
+      position: relative;
+      margin-bottom: 1rem;
+      @include color;
+      button {
+        position: absolute;
+        right: 1rem;
+        color: red;
+      }
+      h5 {
+        margin: 0;
+      }
+    }
+  }
+  .bio {
+    .bio-header {
+      position: relative;
+      margin-bottom: 1rem;
+      @include color;
+      button {
+        position: absolute;
+        right: 1rem;
+        color: red;
+      }
+      h5 {
+        margin: 0;
+      }
+    }
+  }
+  .email {
+    .email-header {
+      position: relative;
+      margin-bottom: 1rem;
+      @include color;
+      button {
+        position: absolute;
+        right: 1rem;
+        color: red;
+      }
+      h5 {
+        margin: 0;
+      }
+    }
+  }
+}
