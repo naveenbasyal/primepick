@@ -7,7 +7,15 @@ import {
   InputAdornment,
   TextField,
 } from "@material-ui/core";
-import { Add, BiotechRounded, Person2Rounded } from "@mui/icons-material";
+import {
+  Add,
+  BiotechRounded,
+  ImportContacts,
+  LocationCity,
+  LocationOn,
+  Person2Rounded,
+  Phone,
+} from "@mui/icons-material";
 import { MailOutline, SupervisedUserCircle } from "@material-ui/icons";
 import getToken from "../utils/getToken";
 import { decodeToken } from "react-jwt";
@@ -18,57 +26,53 @@ import { Toaster, toast } from "react-hot-toast";
 
 const Dashboard = () => {
   const token = getToken();
-
   const decodedToken = decodeToken(token);
 
   // ________________________ STATES ________________________
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("primepick-user"))
-  );
-  const [currentTab, setCurrentTab] = useState(
-    localStorage.getItem("primepick-currentTab") || "Personal Information"
-  );
+  const [user, setUser] = useState(null);
+  const [currentTab, setCurrentTab] = useState("Personal Information");
   const [toggleEdit, setToggleEdit] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [toggleAddAddress, setToggleAddAddress] = useState(false);
+  const [newAddress, setNewAddress] = useState({
+    address: "",
+    landmark: "",
+    city: "",
+    state: "",
+    zip: "",
+    phone: "",
+  });
 
   const handleTabChange = (tab) => {
     setCurrentTab(tab);
-    localStorage.setItem("primepick-currentTab", tab);
   };
+
   // ___________________ USE EFFECT ________________________
 
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const cachedUserData = JSON.parse(
-          localStorage.getItem("primepick-user")
+        const config = {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(token)}`,
+          },
+        };
+        const res = await axios.get(
+          `https://primepick.onrender.com/api/user/${decodedToken.id}`,
+          config
         );
-        if (cachedUserData) {
-          setUser(cachedUserData);
-        } else {
-          const config = {
-            headers: {
-              Authorization: `Bearer ${JSON.parse(token)}`,
-            },
-          };
-          const res = await axios.get(
-            `https://primepick.onrender.com/api/user/${decodedToken.id}`,
-            config
-          );
-          const userData = res.data.data;
-          setUser(userData);
-          console.log(user);
-          localStorage.setItem("primepick-user", JSON.stringify(userData));
-        }
+        const userData = res.data.data;
+        setUser(userData);
+        localStorage.setItem("primepick-user", JSON.stringify(userData));
       } catch (err) {
         console.log(err.response);
       }
     };
 
-    if (decodedToken && decodedToken.id && !user) {
+    if (decodedToken && decodedToken.id) {
       getUserData();
     }
-  }, [decodedToken, user]);
+  }, [decodedToken, token]);
 
   // ________________________ EDIT USER ________________________
   const handleEditUser = async (e) => {
@@ -81,13 +85,11 @@ const Dashboard = () => {
         },
       };
       setLoading(true);
-      console.log("User object:", user);
       const res = await axios.put(
         `https://primepick.onrender.com/api/user/editprofile`,
         user,
         config
       );
-      console.log("Response data:", res.data);
       setUser(res.data.data);
       setLoading(false);
       setToggleEdit(false);
@@ -101,29 +103,71 @@ const Dashboard = () => {
     }
   };
 
+  // ________________________ ADD ADDRESS ________________________
+  const handleAddAddress = async (e) => {
+    e.preventDefault();
+    if (
+      newAddress.address === "" ||
+      newAddress.city === "" ||
+      newAddress.state === "" ||
+      newAddress.zip === "" ||
+      newAddress.phone === ""
+    ) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
+      setLoading(true);
+      const res = await axios.post(
+        `https://primepick.onrender.com/api/user/addaddress`,
+        newAddress,
+        config
+      );
+      setUser(res.data.data);
+      setLoading(false);
+      setToggleAddAddress(false);
+      toast.success("Address Added Successfully");
+      setNewAddress({
+        address: "",
+        landmark: "",
+        city: "",
+        state: "",
+        zip: "",
+        phone: "",
+      });
+    } catch (err) {
+      console.log("Error response:", err.response.data);
+      setLoading(false);
+      setToggleAddAddress(false);
+      toast.error("Something went wrong");
+    }
+  };
+
   if (!user) {
     return (
       <>
-        <div className="container center mt-5">
+        <div className="container center mt-5" style={{ height: "60vh" }}>
           <Lottie animationData={Loading} className="verify centerall" />
         </div>
       </>
     );
   }
 
-  const addressListGridTemplateColumns = {
-    lg: "repeat(3, 1fr)",
-    md: "repeat(2, 1fr)",
-    sm: "repeat(1, 1fr)",
+  const handleDeleteAddress = async (id) => {
+
+    // TODO
   };
 
-  const getAddressListGridTemplateColumns = (breakpoint) => {
-    return addressListGridTemplateColumns[breakpoint];
-  };
   return (
     <>
       <Toaster />
-      {console.log(user)}
+
       <nav className="dash-nav">
         <ul className="dash-nav-list">
           <li
@@ -202,6 +246,7 @@ const Dashboard = () => {
                     className="form-control "
                   />
                 </div>
+
                 {/* ___________________ USERNAME FIELD __________________ */}
                 <div className="name mb-5">
                   <div className="name-header d-flex align-items-center">
@@ -312,11 +357,11 @@ const Dashboard = () => {
       {currentTab === "Address Book" && (
         <div className="address-tab-content container my-5">
           <p className="mb-5 mt-3 fs-2 centerall fw-bolder">Addresses</p>
-          <div className="address-list">
+          <div className="address-list mulish">
             {user.address.length > 0 ? (
               user.address.map((address, index) => (
                 <div key={index} className="text-capitalize address">
-                  <p className="name">{user.name}</p>
+                  <p className="name fw-bold main-color">{user.name}</p>
                   <p className="d-flex flex-wrap ">
                     {address.address} , {address.landmark}
                   </p>
@@ -327,6 +372,21 @@ const Dashboard = () => {
                     <dt className="text-grey fw-lighter">Phone : </dt>
                     <dd className="text-grey"> &nbsp;{address.phone}</dd>
                   </p>
+                  <div className="my-3 d-flex justify-content-between align-items-center">
+                    <Button title="Edit Address">
+                      {/* <Edit /> */}
+                      Edit
+                    </Button>
+                    <Button
+                      title="Delete Address"
+                      onClick={() => {
+                        handleDeleteAddress(address._id);
+                      }}
+                    >
+                      {/* <Delete />  */}
+                      Delete
+                    </Button>
+                  </div>
                 </div>
               ))
             ) : (
@@ -339,6 +399,9 @@ const Dashboard = () => {
             <div
               className="text-capitalize new-address"
               style={{ cursor: "pointer" }}
+              onClick={() => {
+                setToggleAddAddress(true);
+              }}
             >
               <div>
                 <Add />
@@ -346,6 +409,141 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+
+          {/* ______ ADD ADDRESS OVERLAY _____ */}
+          {toggleAddAddress && (
+            <div className="address-overlay">
+              <div className="address-overlay-content">
+                <h3>Add New Address</h3>
+                <form onSubmit={handleAddAddress}>
+                  <TextField
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, address: e.target.value })
+                    }
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <ImportContacts />
+                        </InputAdornment>
+                      ),
+                    }}
+                    label="Address"
+                    variant="standard"
+                    required
+                  />
+                  <TextField
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, landmark: e.target.value })
+                    }
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LocationOn />
+                        </InputAdornment>
+                      ),
+                    }}
+                    label="Landmark"
+                    variant="standard"
+                  />
+                  <TextField
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, city: e.target.value })
+                    }
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LocationCity />
+                        </InputAdornment>
+                      ),
+                    }}
+                    label="City"
+                    variant="standard"
+                    required
+                  />
+                  <TextField
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, state: e.target.value })
+                    }
+                    label="State"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LocationCity />
+                        </InputAdornment>
+                      ),
+                    }}
+                    variant="standard"
+                    required
+                  />
+                  <TextField
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, zip: e.target.value })
+                    }
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LocationCity />
+                        </InputAdornment>
+                      ),
+                    }}
+                    label="Zip"
+                    variant="standard"
+                    required
+                  />
+                  <TextField
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, phone: e.target.value })
+                    }
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Phone />
+                        </InputAdornment>
+                      ),
+                    }}
+                    label="Phone"
+                    variant="standard"
+                    required
+                  />
+                  <div className="address-overlay-buttons">
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      className="btn btn-primary"
+                      style={{
+                        width: "100%",
+                        height: "40px",
+                        cursor: loading ? "not-allowed" : "pointer",
+                      }}
+                      disabled={loading}
+                    >
+                      {loading ? <CircularProgress size={20} /> : "Add Address"}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setToggleAddAddress(false);
+                        setNewAddress({
+                          address: "",
+                          landmark: "",
+                          city: "",
+                          state: "",
+                          zip: "",
+                          phone: "",
+                        });
+                      }}
+                      style={{
+                        width: "100%",
+                        height: "40px",
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

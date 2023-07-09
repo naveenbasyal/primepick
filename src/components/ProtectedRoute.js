@@ -15,7 +15,11 @@ const ProtectedRoute = (props) => {
 
       if (token) {
         const decodedToken = decodeToken(token);
-        
+        if (!decodedToken) {
+          navigate("/login");
+          return;
+        }
+
         setLoggedIn(true);
       } else {
         navigate("/login");

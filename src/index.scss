@@ -8,6 +8,12 @@
 @mixin color {
   color: #360b0e!important;
 }
+.mulish{
+  font-family: "Mulish", sans-serif !important;
+}
+.main-color{
+  color: #360b0e!important;
+}
 .MuiFormLabel-root.Mui-focused {
   @include color;
 }
