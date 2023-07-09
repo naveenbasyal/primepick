@@ -73,12 +73,12 @@ const Login = () => {
     <div className="login container">
       <Toaster />
       <div className="row justify-content-around">
-        <div className="col-lg-5 col-sm-12 login-img ">
+        <div className="col-lg-5 col-sm-12 login-img d-flex align-items-center ">
           <Lottie animationData={LoginAnimation} className="login__animation" />
         </div>
         <div className="col-lg-4 col-sm-12 p-3 my-4 ">
-          <div className="welcome__msg py-4">
-            <h1 className="fs-2">Welcome Back :)</h1>
+          <div className="welcome__msg main-color py-4">
+            <h1 className="fs-2 ">Welcome Back :)</h1>
             <p>
               To keep connected with us please login by email address and
               password🔔
@@ -177,7 +177,7 @@ const Login = () => {
                   disabled={loading}
                   variant="outlined"
                   type="submit"
-                  className="ms-1 me-5"
+                  className="ms-1 me-5 main-bg-color text-white"
                 >
                   {loading ? "Loading..." : "Login"}
                 </Button>

@@ -1,7 +1,5 @@
-// _________________________________________________________
-
 @mixin color {
-  color: #360b0e !important;
+  color: #360b0e;
 }
 
 @mixin center {
@@ -9,34 +7,39 @@
   align-items: center;
   justify-content: center;
 }
+
 .center {
   display: flex;
-
   align-items: center;
   justify-content: center;
 }
+
 .header {
   background-color: #fff;
   border-bottom: 1px solid #e5e5e5;
-
   z-index: 100;
+
   a,
   svg {
     text-decoration: none;
     @include color;
   }
+
   li {
     list-style: none;
   }
+
   ul {
     padding: 0;
     margin: 0;
     height: inherit;
   }
+
   .bg-hover {
     background: #cccce1 !important;
     border-bottom-color: #360b0e !important;
   }
+
   .navPages-item {
     padding: 5px 15px;
     border-right: 1px solid #d8d8d8;
@@ -55,30 +58,36 @@
     height: 90px;
     padding: 0;
   }
+
   .navPages-item a {
     display: flex;
     align-items: center;
     font-size: 0.97rem;
     font-weight: 600;
-
     flex-direction: column;
   }
+
   .navPages {
     height: inherit;
   }
+
   a svg {
     font-size: 1.8rem;
   }
+
   .header-logo,
   .header-logo a {
     @include center;
   }
+
   .navUser {
     flex: 1;
+
     .navUser-section {
       float: right;
       height: 100%;
       align-items: center;
+
       .navUser-item {
         padding: 5px 15px;
         border-right: 1px solid #d8d8d8;
@@ -86,17 +95,26 @@
       }
     }
   }
-  // -----------Hamburger Overlay-------
-  .overlay_wrapper {
-    padding: 3rem 1rem 3rem 6rem !important;
-  }
-  .hamburger-overlay {
+
+  // Hamburger Overlay
+  .hamburger-overlay,
+  .product-overlay,
+  .brand-overlay {
     background: #ffffff;
     border-bottom: 1px solid #d8d8d8;
     top: 101%;
     left: 0;
     right: 0;
     z-index: 1000;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 101%);
+
+    .overlay_wrapper {
+      padding: 3rem 1rem 3rem 6rem !important;
+      overflow-y: auto;
+    }
+
     .hamburger-links {
       strong {
         font-size: 1.2rem;
@@ -111,6 +129,7 @@
         align-items: start;
       }
     }
+
     .leftCol {
       a {
         font-weight: 400;
@@ -121,6 +140,7 @@
         }
       }
     }
+
     .middleCol {
       li {
         line-height: 40px;
@@ -143,7 +163,7 @@
     }
   }
 
-  // -----------Product Overlay-------
+  // Product Overlay
   .product-overlay {
     background: #ffffff;
     border-bottom: 1px solid #d8d8d8;
@@ -151,6 +171,14 @@
     left: 0;
     right: 0;
     z-index: 1000;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 101%);
+
+    .overlay_wrapper {
+      padding: 3rem 4rem !important;
+      overflow-y: auto;
+    }
 
     .product-links {
       strong {
@@ -166,6 +194,7 @@
         align-items: start;
       }
     }
+
     .leftCol {
       a {
         font-weight: 400;
@@ -176,6 +205,7 @@
         }
       }
     }
+
     .middleCol {
       li {
         line-height: 40px;
@@ -197,7 +227,8 @@
       }
     }
   }
-  // -----------Brand Overlay-------
+
+  // Brand Overlay
   .brand-overlay {
     background: #ffffff;
     border-bottom: 1px solid #d8d8d8;
@@ -205,14 +236,20 @@
     left: 0;
     right: 0;
     z-index: 1000;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 101%);
 
     .overlay_wrapper {
       padding: 3rem 4rem !important;
+      overflow-y: auto;
     }
+
     .brand-link {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
+
       a {
         width: 80px;
         height: 80px;

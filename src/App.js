@@ -14,20 +14,16 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Cart from "./Pages/Cart";
 
 const App = () => {
- 
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<ProtectedRoute Component={Home} />} />
+        <Route path="/" element={<Home />} />
         <Route
           path="/dashboard"
           element={<ProtectedRoute Component={Dashboard} />}
         />
-        <Route
-          path="/cart"
-          element={<ProtectedRoute Component={Cart} />}
-        />
+        <Route path="/cart" element={<ProtectedRoute Component={Cart} />} />
         {/* ____Auth____ */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

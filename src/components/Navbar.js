@@ -60,13 +60,14 @@ const Navbar = () => {
                 className={`navPages-item hamburger center ${
                   hamburOverlay && "bg-hover"
                 } `}
-                onClick={() => {
-                  setHamBurOverlay(!hamburOverlay);
-                  setProductOverlay(false);
-                  setBrandOverlay(false);
-                }}
               >
-                <Link>
+                <Link
+                  onClick={() => {
+                    setHamBurOverlay(!hamburOverlay);
+                    setProductOverlay(false);
+                    setBrandOverlay(false);
+                  }}
+                >
                   {hamburOverlay ? (
                     <Close className="fs-1" />
                   ) : (
@@ -75,7 +76,7 @@ const Navbar = () => {
                 </Link>
                 {/* _______________ Menu Overlay _________ */}
                 {hamburOverlay && (
-                  <div className="hamburger-overlay position-absolute ${">
+                  <div className="hamburger-overlay position-absolute mulish ${">
                     <div className="hamburger-container">
                       <div className="row py-4 px-5 overlay_wrapper">
                         <div className="col-lg-4 leftCol">
@@ -121,20 +122,41 @@ const Navbar = () => {
                             <ul>
                               <li>
                                 {token ? (
-                                  <Button
-                                    variant="outlined"
-                                    startIcon={<Login />}
-                                    onClick={() => {
-                                      localStorage.removeItem("primepick");
-                                    }}
+                                  <Link
+                                    to="/login"
+                                    className="m-0 fw-bold text-white mulish "
                                   >
-                                    <Link to="/login" className="m-0 fw-light">
+                                    <Button
+                                      variant="outlined"
+                                      startIcon={
+                                        <Login style={{ color: "white" }} />
+                                      }
+                                      className="text-white text-capitalize main-bg-color"
+                                      onClick={() => {
+                                        localStorage.removeItem("primepick");
+                                        setHamBurOverlay(false);
+                                      }}
+                                    >
                                       Logout
-                                    </Link>
-                                  </Button>
+                                    </Button>
+                                  </Link>
                                 ) : (
-                                  <Link to="/login">
-                                    Account SignIn / Sign Up
+                                  <Link
+                                    to="/login"
+                                    className="m-0 fw-bold text-white mulish "
+                                  >
+                                    <Button
+                                      variant="outlined"
+                                      startIcon={
+                                        <Login style={{ color: "white" }} />
+                                      }
+                                      className="text-white text-capitalize main-bg-color"
+                                      onClick={() => {
+                                        setHamBurOverlay(false);
+                                      }}
+                                    >
+                                      Sign In / Sign Up
+                                    </Button>
                                   </Link>
                                 )}
                               </li>
@@ -150,13 +172,14 @@ const Navbar = () => {
                 className={`navPages-item product center ${
                   productOverlay && "bg-hover"
                 } `}
-                onClick={() => {
-                  setProductOverlay(!productOverlay);
-                  setHamBurOverlay(false);
-                  setBrandOverlay(false);
-                }}
               >
-                <Link>
+                <Link
+                  onClick={() => {
+                    setProductOverlay(!productOverlay);
+                    setHamBurOverlay(false);
+                    setBrandOverlay(false);
+                  }}
+                >
                   <Category />
                   SHOP BY PRODUCT
                 </Link>
@@ -219,13 +242,14 @@ const Navbar = () => {
                 className={`navPages-item brand center ${
                   brandOverlay && "bg-hover"
                 }`}
-                onClick={() => {
-                  setBrandOverlay(!brandOverlay);
-                  setHamBurOverlay(false);
-                  setProductOverlay(false);
-                }}
               >
-                <Link>
+                <Link
+                  onClick={() => {
+                    setBrandOverlay(!brandOverlay);
+                    setHamBurOverlay(false);
+                    setProductOverlay(false);
+                  }}
+                >
                   <AcUnit />
                   SHOP BY BRAND
                 </Link>
@@ -304,7 +328,10 @@ const Navbar = () => {
                 setHamBurOverlay(false);
                 setProductOverlay(false);
                 setBrandOverlay(false);
-                localStorage.setItem("primepick-currentTab", "Personal Information")
+                localStorage.setItem(
+                  "primepick-currentTab",
+                  "Personal Information"
+                );
               }}
             >
               <Link title="Account" className={`link `} to="/dashboard">

@@ -60,7 +60,7 @@ const Register = () => {
           <Lottie animationData={RegisterAnimation} />
         </div>
         <div className="col-lg-4 col-sm-12 p-3 my-4 ">
-          <div className="welcome__msg py-4">
+          <div className="welcome__msg py-4 main-color">
             <p className="m-0 text-grey text-uppercase">start for free :)</p>
             <h1>Sign up to get started</h1>
             <p className="pop ">
