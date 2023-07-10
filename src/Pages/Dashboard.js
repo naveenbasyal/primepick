@@ -49,7 +49,7 @@ const Dashboard = () => {
         },
       };
       const res = await axios.get(
-        `https://primepick.onrender.com/api/user/${decodedToken.id}`,
+        `${process.env.REACT_APP_SERVER_URL}/api/user/${decodedToken.id}`,
         config
       );
       const userData = res.data.data;
@@ -86,7 +86,7 @@ const Dashboard = () => {
       };
       setLoading(true);
       await axios.post(
-        `https://primepick.onrender.com/api/user/addaddress`,
+        `${process.env.REACT_APP_SERVER_URL}/api/user/addaddress`,
         newAddress,
         config
       );
@@ -120,7 +120,7 @@ const Dashboard = () => {
       };
       setLoading(id);
       const res = await axios.post(
-        `https://primepick.onrender.com/api/user/removeaddress`,
+        `${process.env.REACT_APP_SERVER_URL}/api/user/removeaddress`,
         { addressId: id },
         config
       );

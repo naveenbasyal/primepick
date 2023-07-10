@@ -15,7 +15,7 @@ const VerifyEmail = () => {
   const verifyEmail = async () => {
     try {
       const res = await axios.get(
-        `https://primepick.onrender.com/api/user/verify-email/${token}`
+        `${process.env.REACT_APP_SERVER_URL}/api/user/verify-email/${token}`
       );
       console.log(res.data);
       toast.success(res.data.message);

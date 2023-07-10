@@ -42,7 +42,7 @@ const Register = () => {
     console.log(data);
     try {
       const res = await axios.post(
-        "https://primepick.onrender.com/api/user/register",
+        `${process.env.REACT_APP_SERVER_URL}/api/user/register`,
         data
       );
       console.log(res.data);

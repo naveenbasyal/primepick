@@ -55,7 +55,7 @@ const Login = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        "https://primepick.onrender.com/api/user/login",
+        `${process.env.REACT_APP_SERVER_URL}/api/user/login`,
         data
       );
 
