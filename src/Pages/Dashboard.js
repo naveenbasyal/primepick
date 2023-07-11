@@ -119,10 +119,17 @@ const Dashboard = () => {
         },
       };
       setLoading(id);
-      const res = await axios.post(
+      const res = await axios.delete(
         `${process.env.REACT_APP_SERVER_URL}api/user/removeaddress`,
-        { addressId: id },
-        config
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          data: {
+            addressId: id,
+          },
+        }
       );
       const updatedAddress = user.address.filter(
         (address) => address._id !== id
@@ -172,6 +179,7 @@ const Dashboard = () => {
           toggleEdit={toggleEdit}
           setToggleEdit={setToggleEdit}
           handleEditUser={handleEditUser}
+          token={token}
         />
       )}
 
@@ -186,6 +194,8 @@ const Dashboard = () => {
           newAddress={newAddress}
           handleDeleteAddress={handleDeleteAddress}
           setNewAddress={setNewAddress}
+          token={token}
+          getUserData={getUserData}
         />
       )}
 

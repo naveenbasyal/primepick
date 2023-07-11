@@ -10,15 +10,62 @@ import {
   Person2Rounded,
   SupervisedUserCircle,
 } from "@mui/icons-material";
-import React from "react";
+import React, { useState } from "react";
 
 const PersonalInfo = (props) => {
-  const { user, setUser, toggleEdit, setToggleEdit, handleEditUser, loading } =
+  const { user, setUser, toggleEdit, setToggleEdit, loading, token } =
     props;
+
+  const [preImg, setPreImg] = useState(user?.profile);
+  const [profile, setProfile] = useState("")
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    console.log({ ...user, profile: URL.createObjectURL(file) });
+    setProfile(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreImg(reader.result);
+    }
   };
+
+  const handleEditUser =  async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", user.name);
+    formData.append("username", user.username);
+    formData.append("bio", user.bio);
+    formData.append("profile", profile? profile :"" );
+ console.log('t',token)
+    try {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}api/user/editprofile`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          
+        },
+        body: formData,
+      });
+      const updatedUser = await res.json();
+      console.log(updatedUser);
+      if (updatedUser.user) {
+        setUser(updatedUser.user);
+        setToggleEdit(false);
+      }
+      else{
+        // toast.error(updatedUser.message);
+        setToggleEdit(false);
+        return 
+
+      }
+
+    }
+    catch (err) {
+      console.log(err);
+      setToggleEdit(false);
+    }
+
+    
+  }
 
   return (
     <>
@@ -30,7 +77,7 @@ const PersonalInfo = (props) => {
               <div className="name mb-2">
                 <div className="profile-img centerall flex-column">
                   <img
-                    src={user.profile}
+                    src={preImg}
                     alt="profile picture"
                     className="img-fluid mb-4"
                   />
@@ -118,7 +165,7 @@ const PersonalInfo = (props) => {
                   <h5>Email Address</h5>
                 </div>
                 <TextField
-                  disabled={!toggleEdit}
+                  disabled={true}
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
                   id="outlined-basic"
                   InputProps={{
@@ -135,6 +182,7 @@ const PersonalInfo = (props) => {
                   name="email"
                   placeholder="Email Address"
                   className="form-control "
+              
                 />
               </div>
               {/* ___________________ BIO FIELD __________________ */}

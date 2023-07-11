@@ -26,6 +26,8 @@ const Address = (props) => {
     newAddress,
     handleDeleteAddress,
     setNewAddress,
+    token,
+    getUserData
   } = props;
 
   const handleEditAddress = (editAddressId) => {
@@ -42,6 +44,52 @@ const Address = (props) => {
       phone: targetAddress[0].phone,
     });
   };
+
+  const handleEditAddressSubmit = async (e) => {
+    e.preventDefault()
+    if (newAddress.address === "" || newAddress.city === "" || newAddress.state === "" || newAddress.zip === "" || newAddress.phone === "") {
+      toast.error("Please fill all the fields");
+      return;
+    }
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
+     
+      await axios.put(
+        {
+          url: `${process.env.REACT_APP_SERVER_URL}api/user/editaddress`,
+          method: "PUT",
+          data: {
+            address: newAddress.address,
+            landmark: newAddress.landmark,
+            city: newAddress.city,
+            state: newAddress.state,
+            zip: newAddress.zip,
+            phone: newAddress.phone,
+            addressId: newAddress._id
+          },
+        }
+        
+      );
+      getUserData();
+     
+      setToggleEditAddress(false);
+      toast.success("Address Updated Successfully");
+      setNewAddress({
+        address: "",
+        landmark: "",
+        city: "",
+    }
+    );
+    } catch (err) {
+      console.log("Error response:", err.response?.data);
+      toast.error(err.response.data.msg);
+    }
+  }
 
   return (
     <>
@@ -226,6 +274,10 @@ const Address = (props) => {
                       width: "100%",
                       height: "40px",
                       cursor: loading ? "not-allowed" : "pointer",
+                    }}
+                    disabled={loading}
+                    onClick={() => {
+                      handleEditAddressSubmit();
                     }}
                   >
                     Edit Address
