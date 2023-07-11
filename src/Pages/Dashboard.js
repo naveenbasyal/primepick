@@ -36,7 +36,7 @@ const Dashboard = () => {
   // ___________________ USE EFFECT ________________________
 
   useEffect(() => {
-    if (token && decodedToken && decodedToken.id) {
+    if (token) {
       getUserData();
     }
   }, [token]);
@@ -49,7 +49,7 @@ const Dashboard = () => {
         },
       };
       const res = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/user/${decodedToken.id}`,
+        `${process.env.REACT_APP_SERVER_URL}api/user/${decodedToken.id}`,
         config
       );
       const userData = res.data.data;
@@ -86,11 +86,11 @@ const Dashboard = () => {
       };
       setLoading(true);
       await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/api/user/addaddress`,
+        `${process.env.REACT_APP_SERVER_URL}api/user/addaddress`,
         newAddress,
         config
       );
-      console.log("done");
+
       getUserData();
       setLoading(false);
       setToggleAddAddress(false);
@@ -120,7 +120,7 @@ const Dashboard = () => {
       };
       setLoading(id);
       const res = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/api/user/removeaddress`,
+        `${process.env.REACT_APP_SERVER_URL}api/user/removeaddress`,
         { addressId: id },
         config
       );

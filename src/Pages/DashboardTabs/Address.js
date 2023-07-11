@@ -16,6 +16,7 @@ import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 
 const Address = (props) => {
+  const [toggleEditAddress, setToggleEditAddress] = useState(false);
   const {
     user,
     toggleAddAddress,
@@ -27,6 +28,20 @@ const Address = (props) => {
     setNewAddress,
   } = props;
 
+  const handleEditAddress = (editAddressId) => {
+    setToggleEditAddress(true);
+    const targetAddress = user.address.filter(
+      (add) => add._id === editAddressId
+    );
+    setNewAddress({
+      address: targetAddress[0].address,
+      landmark: targetAddress[0].landmark,
+      city: targetAddress[0].city,
+      state: targetAddress[0].state,
+      zip: targetAddress[0].zip,
+      phone: targetAddress[0].phone,
+    });
+  };
 
   return (
     <>
@@ -48,8 +63,12 @@ const Address = (props) => {
                   <dd className="text-grey"> &nbsp;{address.phone}</dd>
                 </p>
                 <div className="my-3 d-flex justify-content-between align-items-center">
-                  <Button title="Edit Address">
-                    {/* <Edit /> */}
+                  <Button
+                    title="Edit Address"
+                    onClick={() => {
+                      handleEditAddress(address._id);
+                    }}
+                  >
                     Edit
                   </Button>
                   <Button
@@ -91,6 +110,143 @@ const Address = (props) => {
           </div>
         </div>
 
+        {/* ______________ Edit ADDRESS OVERLAY _____________ */}
+        {toggleEditAddress && (
+          <div className="address-overlay mulish">
+            <div className="address-overlay-content">
+              <h3 className="main-color fw-bold">Edit your Address</h3>
+              <form onSubmit={handleEditAddress}>
+                <TextField
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, address: e.target.value })
+                  }
+                  placeholder="Enter your address"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <ImportContacts />
+                      </InputAdornment>
+                    ),
+                  }}
+                  label="Address"
+                  variant="standard"
+                  value={newAddress.address}
+                  required
+                />
+                <TextField
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, landmark: e.target.value })
+                  }
+                  placeholder="Enter your landmark"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LocationOn />
+                      </InputAdornment>
+                    ),
+                  }}
+                  label="Landmark"
+                  value={newAddress.landmark}
+                  variant="standard"
+                />
+                <TextField
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, city: e.target.value })
+                  }
+                  placeholder="Enter your city"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LocationCity />
+                      </InputAdornment>
+                    ),
+                  }}
+                  label="City"
+                  variant="standard"
+                  value={newAddress.city}
+                  required
+                />
+                <TextField
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, state: e.target.value })
+                  }
+                  placeholder="Enter your state"
+                  label="State"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LocationCity />
+                      </InputAdornment>
+                    ),
+                  }}
+                  variant="standard"
+                  value={newAddress.state}
+                  required
+                />
+                <TextField
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, zip: e.target.value })
+                  }
+                  placeholder="Enter your zip"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LocationCity />
+                      </InputAdornment>
+                    ),
+                  }}
+                  label="Zip"
+                  variant="standard"
+                  value={newAddress.zip}
+                  required
+                />
+                <TextField
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, phone: e.target.value })
+                  }
+                  placeholder="Enter your phone"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Phone />
+                      </InputAdornment>
+                    ),
+                  }}
+                  label="Phone"
+                  variant="standard"
+                  value={newAddress.phone}
+                  required
+                />
+                <div className="address-overlay-buttons">
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    className="btn btn-primary"
+                    style={{
+                      width: "100%",
+                      height: "40px",
+                      cursor: loading ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Edit Address
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setToggleEditAddress(false);
+                    }}
+                    style={{
+                      width: "100%",
+                      height: "40px",
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
         {/* ______________ ADD ADDRESS OVERLAY _____________ */}
         {toggleAddAddress && (
           <div className="address-overlay mulish">

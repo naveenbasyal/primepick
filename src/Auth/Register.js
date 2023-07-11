@@ -42,7 +42,7 @@ const Register = () => {
     console.log(data);
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/api/user/register`,
+        `${process.env.REACT_APP_SERVER_URL}api/user/register`,
         data
       );
       console.log(res.data);
@@ -170,7 +170,7 @@ const Register = () => {
               </div>
 
               <div className="login__btn my-5 d-flex ">
-                <Button variant="outlined" type="submit" className="ms-1 me-5">
+              <Button variant="outlined" type="submit" className="ms-1 me-5">
                   Create an account
                 </Button>
               </div>

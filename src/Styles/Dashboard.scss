@@ -1,6 +1,9 @@
 @mixin color {
   color: #360b0e;
 }
+@mixin background {
+  color: #360b0e;
+}
 @mixin mulish {
   font-family: "Mulish", sans-serif !important;
 }
@@ -46,20 +49,31 @@
 
 .dash-tab-content {
   @include mulish;
-  .name {
-    .name-header {
-      position: relative;
-      margin-bottom: 1rem;
-      @include color;
-      button {
-        position: absolute;
-        right: 1rem;
-        color: red;
-      }
-      h5 {
-        margin: 0;
-      }
+  .profile-img {
+    object-fit: cover;
+    border-radius: 50%;
+
+    img {
+      width: 6rem;
+      height: auto;
+      border-radius: 50%;
     }
+  }
+  .u-f-b {
+    padding: 10px 5px!important;
+    width: 10rem;
+    border: 2px solid #e5e5e5;
+    @include color;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .u-f-b input {
+    display: none;
+  }
+
+  a.u-f-b:hover {
+    color: white;
   }
   .name {
     .name-header {

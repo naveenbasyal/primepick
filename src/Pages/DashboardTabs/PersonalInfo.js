@@ -1,15 +1,58 @@
-import { Button, CircularProgress, InputAdornment, TextField } from "@material-ui/core";
-import { BiotechRounded, MailOutline, Person2Rounded, SupervisedUserCircle } from "@mui/icons-material";
+import {
+  Button,
+  CircularProgress,
+  InputAdornment,
+  TextField,
+} from "@material-ui/core";
+import {
+  BiotechRounded,
+  MailOutline,
+  Person2Rounded,
+  SupervisedUserCircle,
+} from "@mui/icons-material";
 import React from "react";
 
 const PersonalInfo = (props) => {
-    const { user, setUser, toggleEdit, setToggleEdit, handleEditUser, loading } = props;
+  const { user, setUser, toggleEdit, setToggleEdit, handleEditUser, loading } =
+    props;
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    console.log({ ...user, profile: URL.createObjectURL(file) });
+  };
+
   return (
     <>
-      <div className="dash-tab-content container my-5">
+      <div className="dash-tab-content container my-5 ">
         <div className="dash-tab-content-header row justify-content-center">
           <div className="dash-tab-content-body col-lg-8 col-sm-12">
             <form onSubmit={handleEditUser}>
+              {/* ___________________ PROFILE PHOTO FIELD __________________ */}
+              <div className="name mb-2">
+                <div className="profile-img centerall flex-column">
+                  <img
+                    src={user.profile}
+                    alt="profile picture"
+                    className="img-fluid mb-4"
+                  />
+                  {toggleEdit && (
+                    <div className="upload-button ">
+                      <label
+                        htmlFor="profile-img"
+                        className="u-f-b centerall"
+                      >
+                        Upload Image
+                        <input
+                          type="file"
+                          className="form-control"
+                          id="profile-img"
+                          accept="image/*"
+                          onChange={handleFileUpload}
+                        />
+                      </label>
+                    </div>
+                  )}
+                </div>
+              </div>
               {/* ___________________ NAME FIELD __________________ */}
               <div className="name mb-5">
                 <div className="name-header d-flex align-items-center">
@@ -66,7 +109,7 @@ const PersonalInfo = (props) => {
                   type="text"
                   name="username"
                   placeholder="User Name"
-                  className="form-control "
+                  className="form-control"
                 />
               </div>
               {/* ___________________ EMAIL FIELD __________________ */}
