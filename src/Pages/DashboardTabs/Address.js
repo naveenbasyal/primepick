@@ -26,8 +26,9 @@ const Address = (props) => {
     newAddress,
     handleDeleteAddress,
     setNewAddress,
+    setLoading,
     token,
-    getUserData
+    getUserData,
   } = props;
 
   const handleEditAddress = (editAddressId) => {
@@ -46,8 +47,14 @@ const Address = (props) => {
   };
 
   const handleEditAddressSubmit = async (e) => {
-    e.preventDefault()
-    if (newAddress.address === "" || newAddress.city === "" || newAddress.state === "" || newAddress.zip === "" || newAddress.phone === "") {
+    e.preventDefault();
+    if (
+      newAddress.address === "" ||
+      newAddress.city === "" ||
+      newAddress.state === "" ||
+      newAddress.zip === "" ||
+      newAddress.phone === ""
+    ) {
       toast.error("Please fill all the fields");
       return;
     }
@@ -58,11 +65,10 @@ const Address = (props) => {
           "Content-Type": "application/json",
         },
       };
-     
+      setLoading(true);
       await axios.put(
+        `${process.env.REACT_APP_SERVER_URL}api/user/editaddress`,
         {
-          url: `${process.env.REACT_APP_SERVER_URL}api/user/editaddress`,
-          method: "PUT",
           data: {
             address: newAddress.address,
             landmark: newAddress.landmark,
@@ -70,26 +76,27 @@ const Address = (props) => {
             state: newAddress.state,
             zip: newAddress.zip,
             phone: newAddress.phone,
-            addressId: newAddress._id
+            addressId: newAddress._id,
           },
+          config,
         }
-        
       );
+
       getUserData();
-     
+      setLoading(false);
       setToggleEditAddress(false);
       toast.success("Address Updated Successfully");
       setNewAddress({
         address: "",
         landmark: "",
         city: "",
-    }
-    );
+      });
     } catch (err) {
+      setLoading(false);
       console.log("Error response:", err.response?.data);
       toast.error(err.response.data.msg);
     }
-  }
+  };
 
   return (
     <>
@@ -163,7 +170,7 @@ const Address = (props) => {
           <div className="address-overlay mulish">
             <div className="address-overlay-content">
               <h3 className="main-color fw-bold">Edit your Address</h3>
-              <form onSubmit={handleEditAddress}>
+              <form onSubmit={handleEditAddressSubmit}>
                 <TextField
                   onChange={(e) =>
                     setNewAddress({ ...newAddress, address: e.target.value })
@@ -276,11 +283,16 @@ const Address = (props) => {
                       cursor: loading ? "not-allowed" : "pointer",
                     }}
                     disabled={loading}
-                    onClick={() => {
-                      handleEditAddressSubmit();
-                    }}
+                    onClick={handleEditAddressSubmit}
                   >
-                    Edit Address
+                    {loading ? (
+                      <CircularProgress
+                        size={21}
+                        style={{ color: "#360b0e" }}
+                      />
+                    ) : (
+                      "Save"
+                    )}
                   </Button>
                   <Button
                     variant="contained"

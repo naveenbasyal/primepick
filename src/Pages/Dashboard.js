@@ -180,6 +180,7 @@ const Dashboard = () => {
           setToggleEdit={setToggleEdit}
           handleEditUser={handleEditUser}
           token={token}
+          setLoading={setLoading}
         />
       )}
 
@@ -196,6 +197,7 @@ const Dashboard = () => {
           setNewAddress={setNewAddress}
           token={token}
           getUserData={getUserData}
+          setLoading={setLoading}
         />
       )}
 

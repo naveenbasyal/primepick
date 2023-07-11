@@ -11,13 +11,15 @@ import {
   SupervisedUserCircle,
 } from "@mui/icons-material";
 import React, { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const PersonalInfo = (props) => {
-  const { user, setUser, toggleEdit, setToggleEdit, loading, token } =
-    props;
+  const { user, setUser, toggleEdit, setToggleEdit, loading, token } = props;
 
   const [preImg, setPreImg] = useState(user?.profile);
-  const [profile, setProfile] = useState("")
+  const [profile, setProfile] = useState("");
+  const [waiting, setWaiting] = useState(false);
+
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     setProfile(file);
@@ -25,47 +27,47 @@ const PersonalInfo = (props) => {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setPreImg(reader.result);
-    }
+    };
   };
 
-  const handleEditUser =  async (e) => {
+  const handleEditUser = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", user.name);
     formData.append("username", user.username);
     formData.append("bio", user.bio);
-    formData.append("profile", profile? profile :"" );
- console.log('t',token)
+    formData.append("profile", profile ? profile : "");
+
     try {
-      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}api/user/editprofile`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          
-        },
-        body: formData,
-      });
+      setWaiting(true);
+      const res = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}api/user/editprofile`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
       const updatedUser = await res.json();
-      console.log(updatedUser);
+      setWaiting(false);
+
       if (updatedUser.user) {
         setUser(updatedUser.user);
+        toast.success(updatedUser.msg);
         setToggleEdit(false);
-      }
-      else{
-        // toast.error(updatedUser.message);
+      } else {
+        toast.error("Something went wrong");
         setToggleEdit(false);
-        return 
-
+        return;
       }
-
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
       setToggleEdit(false);
+      setWaiting(false);
     }
-
-    
-  }
+  };
 
   return (
     <>
@@ -83,10 +85,7 @@ const PersonalInfo = (props) => {
                   />
                   {toggleEdit && (
                     <div className="upload-button ">
-                      <label
-                        htmlFor="profile-img"
-                        className="u-f-b centerall"
-                      >
+                      <label htmlFor="profile-img" className="u-f-b centerall">
                         Upload Image
                         <input
                           type="file"
@@ -182,7 +181,6 @@ const PersonalInfo = (props) => {
                   name="email"
                   placeholder="Email Address"
                   className="form-control "
-              
                 />
               </div>
               {/* ___________________ BIO FIELD __________________ */}
@@ -223,11 +221,17 @@ const PersonalInfo = (props) => {
                     style={{
                       width: "100%",
                       height: "40px",
-                      cursor: loading ? "not-allowed" : "pointer",
+                      cursor: waiting ? "not-allowed" : "pointer",
                     }}
-                    disabled={loading}
+                    disabled={waiting}
                   >
-                    {loading ? <CircularProgress size={20} /> : "Save"}
+                    {waiting ? (
+                      <CircularProgress
+                        style={{ width: "20px", height: "20px" }}
+                      />
+                    ) : (
+                      "Save"
+                    )}
                   </Button>
                 </div>
               )}
