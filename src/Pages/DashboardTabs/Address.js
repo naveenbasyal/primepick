@@ -36,6 +36,7 @@ const Address = (props) => {
     const targetAddress = user.address.filter(
       (add) => add._id === editAddressId
     );
+    console.log('target',targetAddress)
     setNewAddress({
       address: targetAddress[0].address,
       landmark: targetAddress[0].landmark,
@@ -43,9 +44,11 @@ const Address = (props) => {
       state: targetAddress[0].state,
       zip: targetAddress[0].zip,
       phone: targetAddress[0].phone,
+      addressId:targetAddress[0]._id
+    
     });
   };
-
+console.log(newAddress)
   const handleEditAddressSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -66,31 +69,34 @@ const Address = (props) => {
         },
       };
       setLoading(true);
-      await axios.put(
-        `${process.env.REACT_APP_SERVER_URL}api/user/editaddress`,
+    const res =  await fetch(
+        `${process.env.REACT_APP_SERVER_URL}api/user/updateaddress`,
         {
-          data: {
-            address: newAddress.address,
-            landmark: newAddress.landmark,
-            city: newAddress.city,
-            state: newAddress.state,
-            zip: newAddress.zip,
-            phone: newAddress.phone,
-            addressId: newAddress._id,
-          },
-          config,
+          method: "PUT",
+          headers: config.headers,
+          body: JSON.stringify({...newAddress}),
         }
-      );
 
-      getUserData();
-      setLoading(false);
-      setToggleEditAddress(false);
-      toast.success("Address Updated Successfully");
-      setNewAddress({
-        address: "",
-        landmark: "",
-        city: "",
-      });
+        
+      );
+      const data = await res.json();
+      console.log(data);
+      if(res.ok){
+        getUserData();
+        setLoading(false);
+        setToggleEditAddress(false);
+        toast.success("Address Updated Successfully");
+        setNewAddress({
+          address: "",
+          landmark: "",
+          city: "",
+        });
+      }
+
+      else{
+        setLoading(false);
+        toast.error(data.msg);
+      }
     } catch (err) {
       setLoading(false);
       console.log("Error response:", err.response?.data);
