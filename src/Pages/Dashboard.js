@@ -58,12 +58,6 @@ const Dashboard = () => {
       console.log(err.response);
     }
   };
-
-  // ________________________ EDIT USER ________________________
-  const handleEditUser = async (e) => {
-    // TODO: Add Logic
-  };
-
   // ________________________ ADD ADDRESS ________________________
   const handleAddAddress = async (e) => {
     e.preventDefault();
@@ -178,7 +172,6 @@ const Dashboard = () => {
           setUser={setUser}
           toggleEdit={toggleEdit}
           setToggleEdit={setToggleEdit}
-          handleEditUser={handleEditUser}
           token={token}
           setLoading={setLoading}
         />

@@ -1,0 +1,74 @@
+// _____________ Register Seller _____________
+
+@mixin form {
+  .form-group {
+    display: flex;
+    flex-direction: column !important;
+    margin-bottom: 1.5rem;
+    label {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    input {
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      border: 1px solid #360b0e;
+      font-size: 1rem;
+      outline: none;
+      &:focus {
+        border: 1px solid #360b0e;
+      }
+    }
+
+    button {
+      background-color: #360b0e;
+      border: none;
+      padding: 0.55rem 0.7rem;
+      border-radius: 4px;
+      font-size: 0.97rem !important;
+      text-transform: uppercase;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.2s ease-in-out;
+      &:hover {
+        //   color: #360b0e;
+        background-color: #5d2f32;
+      }
+    }
+  }
+  .others {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    p {
+      a {
+        font-size: 1.06rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+// ___________________ Seller register _________________
+.register-seller {
+  @include form;
+}
+// ___________________ Seller login _________________
+.login-shop {
+  @include form;
+  margin-top: 3rem;
+  .form-help {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    .remember__me {
+      display: flex;
+      align-items: center;
+      input {
+        margin-right: 0.1rem !important;
+      }
+    }
+  }
+}

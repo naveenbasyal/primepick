@@ -9,7 +9,10 @@ import NotFound from "./components/NotFound";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import VerifyEmail from "./Pages/VerifyEmail";
-
+// __________Seller Imports _____________
+import SellerRegister from "./components/Seller/Register";
+import SellerLogin from "./components/Seller/Login";
+// ______________________________________
 import ProtectedRoute from "./components/ProtectedRoute";
 import Cart from "./Pages/Cart";
 
@@ -19,11 +22,18 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        {/* _________ User Dashboard _______ */}
         <Route
           path="/dashboard"
           element={<ProtectedRoute Component={Dashboard} />}
         />
+        {/* _________ Cart _______ */}
         <Route path="/cart" element={<ProtectedRoute Component={Cart} />} />
+
+        {/* __________ Become a Seller ___________*/}
+        <Route path="/create-shop" element={<SellerRegister />} />
+        <Route path="/shop-login" element={<SellerLogin />} />
+
         {/* ____Auth____ */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

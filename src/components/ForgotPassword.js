@@ -21,7 +21,7 @@ const ForgotPassword = () => {
   });
 
   return (
-    <div className="container">
+    <div className="container mt-5">
       <div className="row my-3 justify-content-around">
         <div className="col-md-5 col-sm-12">
           <Lottie

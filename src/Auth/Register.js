@@ -16,14 +16,16 @@ import {
   Person2Rounded,
 } from "@mui/icons-material";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { registerSchema } from "../validation/ValidationSchema";
 import "../Styles/login.scss";
+import { Toaster, toast } from "react-hot-toast";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -39,22 +41,27 @@ const Register = () => {
   const handleRegister = async (values) => {
     const { username, email, password } = values;
     const data = { name: username, email: email, password: password };
-    console.log(data);
+
     try {
+      setLoading(true);
       const res = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}api/user/register`,
         data
       );
-      console.log(res.data);
-      alert(res.data.message);
+      setLoading(false);
+      toast.success(res.data.msg);
+      navigate("/login");
       formik.resetForm();
     } catch (err) {
-      console.log(err.response.data.msg);
-      alert(err.response.data.msg);
+      setLoading(false);
+      console.log(err.response.data.msg)
+      
+      toast.error("Something went wrong");
     }
   };
   return (
     <div className="register container">
+      <Toaster />
       <div className="row justify-content-around">
         <div className="col-lg-6 py-3 col-sm-12 login-img ">
           <Lottie animationData={RegisterAnimation} />
@@ -170,8 +177,8 @@ const Register = () => {
               </div>
 
               <div className="login__btn my-5 d-flex ">
-              <Button variant="outlined" type="submit" className="ms-1 me-5">
-                  Create an account
+                <Button variant="outlined" type="submit" className="ms-1 me-5">
+                  {loading ? "Loading..." : "Create account"}
                 </Button>
               </div>
             </form>

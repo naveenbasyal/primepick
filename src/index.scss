@@ -1,10 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Amaranth:wght@700&family=Mulish:wght@400;500&family=Rubik:wght@800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Amaranth:wght@700&family=Mulish:wght@400;500&family=Poppins&family=Rubik:wght@800&display=swap");
+
+//make a good scroolbar
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 @mixin color {
   color: #360b0e!important;
 }

@@ -11,7 +11,8 @@ import {
   LocationOn,
   Phone,
 } from "@mui/icons-material";
-import axios from "axios";
+import AddressNotFound from "../../assets/notFound.json";
+import Lottie from "lottie-react";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 
@@ -36,7 +37,7 @@ const Address = (props) => {
     const targetAddress = user.address.filter(
       (add) => add._id === editAddressId
     );
-    console.log('target',targetAddress)
+    console.log("target", targetAddress);
     setNewAddress({
       address: targetAddress[0].address,
       landmark: targetAddress[0].landmark,
@@ -44,11 +45,10 @@ const Address = (props) => {
       state: targetAddress[0].state,
       zip: targetAddress[0].zip,
       phone: targetAddress[0].phone,
-      addressId:targetAddress[0]._id
-    
+      addressId: targetAddress[0]._id,
     });
   };
-console.log(newAddress)
+  console.log(newAddress);
   const handleEditAddressSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -69,19 +69,17 @@ console.log(newAddress)
         },
       };
       setLoading(true);
-    const res =  await fetch(
+      const res = await fetch(
         `${process.env.REACT_APP_SERVER_URL}api/user/updateaddress`,
         {
           method: "PUT",
           headers: config.headers,
-          body: JSON.stringify({...newAddress}),
+          body: JSON.stringify({ ...newAddress }),
         }
-
-        
       );
       const data = await res.json();
       console.log(data);
-      if(res.ok){
+      if (res.ok) {
         getUserData();
         setLoading(false);
         setToggleEditAddress(false);
@@ -91,9 +89,7 @@ console.log(newAddress)
           landmark: "",
           city: "",
         });
-      }
-
-      else{
+      } else {
         setLoading(false);
         toast.error(data.msg);
       }
@@ -107,9 +103,15 @@ console.log(newAddress)
   return (
     <>
       <div className="address-tab-content container my-5">
-        <p className="mb-5 mt-3 fs-2 centerall fw-bolder">Addresses</p>
-        <div className="address-list mulish">
-          {user.address.length > 0 ? (
+        <p className="mb-4 mt-3 fs-2 centerall fw-bolder">Addresses</p>
+        {user.address.length === 0 && (
+          <div className="text-capitalize">
+            <Lottie animationData={AddressNotFound} className="noaddress" />
+            {/* <p className="name centerall fs-2 text-danger">No Address Found</p> */}
+          </div>
+        )}
+        <div className="address-list mulish ">
+          {user.address.length > 0 &&
             user.address.map((address, index) => (
               <div key={index} className="text-capitalize address">
                 <p className="name fw-bold main-color">{user.name}</p>
@@ -149,26 +151,19 @@ console.log(newAddress)
                   </Button>
                 </div>
               </div>
-            ))
-          ) : (
-            <div className="text-capitalize">
-              <p className="name centerall fs-2 text-danger">
-                No Address Found
-              </p>
-            </div>
-          )}
-          <div
-            className="text-capitalize new-address"
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              setToggleAddAddress(true);
-            }}
-          >
-            <div>
-              <Add />
-              <strong>New Address</strong>
-            </div>
-          </div>
+            ))}
+        </div>
+        <div
+          className="text-capitalize new-address"
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            setToggleAddAddress(true);
+          }}
+        >
+          <strong>
+            <Add />
+            New Address
+          </strong>
         </div>
 
         {/* ______________ Edit ADDRESS OVERLAY _____________ */}
@@ -292,10 +287,7 @@ console.log(newAddress)
                     onClick={handleEditAddressSubmit}
                   >
                     {loading ? (
-                      <CircularProgress
-                        size={21}
-                        style={{ color: "#360b0e" }}
-                      />
+                      <CircularProgress size={21} style={{ color: "#fff" }} />
                     ) : (
                       "Save"
                     )}

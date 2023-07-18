@@ -343,6 +343,16 @@ const Navbar = () => {
                 <ShoppingCart />
               </Link>
             </li>
+            <li className="navUser-item">
+              <Link
+                title="Become a seller"
+                className="main-bg-color text-white p-2"
+                to={"/create-shop"}
+                style={{borderRadius:"3px"}}
+              >
+                Become a seller
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
