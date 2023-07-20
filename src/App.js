@@ -15,11 +15,13 @@ import SellerLogin from "./components/Seller/Login";
 // ______________________________________
 import ProtectedRoute from "./components/ProtectedRoute";
 import Cart from "./Pages/Cart";
-
+import { Toaster } from "react-hot-toast";
+import StoreVerifyEmail from "./Pages/StoreVerifyEmail";
 const App = () => {
   return (
     <>
       <Navbar />
+      <Toaster />
       <Routes>
         <Route path="/" element={<Home />} />
         {/* _________ User Dashboard _______ */}
@@ -48,6 +50,7 @@ const App = () => {
 
         {/* ____Verify Email____ */}
         <Route path="/auth/verifyemail/:token" element={<VerifyEmail />} />
+        <Route path="/auth/store/verifyemail/:token" element={<StoreVerifyEmail />} />
       </Routes>
     </>
   );
