@@ -58,6 +58,9 @@
 .login-shop {
   @include form;
   margin-top: 3rem;
+  .border-red {
+    border: 1px solid red !important;
+  }
   .form-help {
     display: flex;
     justify-content: space-between;
