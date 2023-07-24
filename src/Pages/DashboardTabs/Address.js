@@ -48,7 +48,7 @@ const Address = (props) => {
       addressId: targetAddress[0]._id,
     });
   };
-  console.log(newAddress);
+
   const handleEditAddressSubmit = async (e) => {
     e.preventDefault();
     if (

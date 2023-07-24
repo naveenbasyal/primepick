@@ -7,7 +7,7 @@ import axios from "axios";
 import Lottie from "lottie-react";
 
 import VerifyEmailAnimation from "../assets/loading.json";
-const VerifyEmail = () => {
+const StoreVerifyEmail = () => {
   const { token } = useParams();
   const { isExpired } = useJwt(token);
   const navigate = useNavigate();
@@ -15,15 +15,15 @@ const VerifyEmail = () => {
   const verifyEmail = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}api/user/verify-email/${token}`
+        `${process.env.REACT_APP_SERVER_URL}api/admin/verify-email/${token}`
       );
       console.log(res.data);
       toast.success(res.data.msg);
-      navigate("/login");
+      navigate("/shop-login");
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error);
       toast.error(error.response.data.msg);
-      navigate("/login");
+      navigate("/shop-login");
     }
   };
   useEffect(() => {
@@ -38,12 +38,12 @@ const VerifyEmail = () => {
 
   return (
     <div className="container pop centerall" style={{ height: "70vh" }}>
-      <div className="dim p-1  ">
+      <div className="dim p-1 ">
         <Lottie
           animationData={VerifyEmailAnimation}
           className="verify centerall"
         />
-        <p className="fs-5 centerall fw-bold">
+        <p className="fs-5 centerall">
           Verifying email&nbsp;
           <span>
             <PulseLoader color="#000" size={6} />
@@ -54,4 +54,4 @@ const VerifyEmail = () => {
   );
 };
 
-export default VerifyEmail;
+export default StoreVerifyEmail;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useFetcher, useLocation } from "react-router-dom";
 import "../Styles/Navbar.scss";
 import { Button, TextField } from "@material-ui/core";
 import {
@@ -12,11 +12,12 @@ import {
   Close,
 } from "@material-ui/icons";
 import getToken from "../utils/getToken";
+import sellerToken from "../utils/getSellerToken";
 import { Login } from "@mui/icons-material";
 
 const Navbar = () => {
-  const location = useLocation();
   const token = getToken();
+  const seller = sellerToken();
   const searchRef = useRef(null);
   // States ---------------------->
   const [hamburOverlay, setHamBurOverlay] = useState(false);
@@ -343,16 +344,32 @@ const Navbar = () => {
                 <ShoppingCart />
               </Link>
             </li>
-            <li className="navUser-item">
-              <Link
-                title="Become a seller"
-                className="main-bg-color text-white p-2"
-                to={"/create-shop"}
-                style={{borderRadius:"3px"}}
-              >
-                Become a seller
-              </Link>
-            </li>
+            {seller ? (
+              <li className="navUser-item">
+                <Link
+                  title="Shop"
+                  to="/shop"
+                  onClick={() => {
+                    localStorage.setItem("currentPage", "dashboard");
+                  }}
+                  className="main-bg-color text-white p-2"
+                  style={{ borderRadius: "3px" }}
+                >
+                  Go to Shop
+                </Link>
+              </li>
+            ) : (
+              <li className="navUser-item">
+                <Link
+                  title="Become a seller"
+                  className="main-bg-color text-white p-2"
+                  to={"/create-shop"}
+                  style={{ borderRadius: "3px" }}
+                >
+                  Become a seller
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       </div>

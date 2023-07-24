@@ -1,11 +1,14 @@
 import { Checkbox } from "@material-ui/core";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../../Styles/Seller.scss";
-import { Formik, useFormik } from "formik";
+import { Toaster, toast } from "react-hot-toast";
+import { useFormik } from "formik";
 import { sellerLoginSchema } from "../../validation/ValidationSchema";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -13,13 +16,40 @@ const Login = () => {
     },
     validationSchema: sellerLoginSchema,
     onSubmit: (values) => {
-      console.log(values);
-      formik.resetForm();
+      handleSubmit(values);
     },
   });
 
+  const handleSubmit = async (values) => {
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}api/admin/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
+      const data = await res.json();
+      
+      localStorage.setItem("primepick-seller", JSON.stringify(data.data.token));
+      navigate("/shop");
+      toast.success("Login Successful");
+      setLoading(false);
+    } catch (error) {
+      // Handle any errors that occurred during the async operation
+      console.error("An error occurred:", error.message);
+      setLoading(false);
+      toast.error(" Invalid Credentials");
+    }
+  };
+
   return (
     <div className="container login-shop mulish">
+      <Toaster />
       <div className="row centerh">
         <div className="col-lg-5 col-md-10 col-sm-12">
           <h3 className="fw-bold centerall mb-5">Login to your shop</h3>
@@ -30,19 +60,19 @@ const Login = () => {
               <input
                 type="email"
                 id="email"
-                name="email"
                 placeholder="Enter your email"
+                name="email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 className={
                   formik.touched.email && formik.errors.email
-                    ? "form-control is-invalid  border-red"
+                    ? "form-control is-invalid border-red"
                     : ""
                 }
               />
-              {formik.touched.email && formik.errors.email && (
-                <span className="text-danger">{formik.errors.email}</span>
-              )}
+              {formik.touched.email && formik.errors.email ? (
+                <div className="invalid-feedback">{formik.errors.email}</div>
+              ) : null}
             </div>
             {/* _____ Password _____ */}
             <div className="form-group">
@@ -51,6 +81,7 @@ const Login = () => {
                 type="password"
                 id="password"
                 placeholder="Enter your password"
+                name="password"
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 className={
@@ -59,9 +90,9 @@ const Login = () => {
                     : ""
                 }
               />
-              {formik.touched.password && formik.errors.password && (
-                <span className="text-danger">{formik.errors.password}</span>
-              )}
+              {formik.touched.password && formik.errors.password ? (
+                <div className="invalid-feedback">{formik.errors.password}</div>
+              ) : null}
             </div>
             {/* _____ Remember Me & Forgot Password _____ */}
             <div className="form-help">
@@ -69,13 +100,19 @@ const Login = () => {
                 <Checkbox color="primary" className="remember__me__checkbox" />
                 <p className="main-color m-0 centerall">Remember Me</p>
               </div>
-              <div className="forgot__password">
+              <div className="forgot__password ">
                 <Link to="/forgotpassword">Forgot Password?</Link>
               </div>
             </div>
             {/* _____ Submit Button _____ */}
             <div className="form-group">
-              <button type="submit">Login</button>
+              <button
+                type="submit"
+                className={loading ? "bg-secondary" : ""}
+                disabled={loading}
+              >
+                {loading ? "Loading . . ." : "Login"}
+              </button>
             </div>
           </form>
         </div>
