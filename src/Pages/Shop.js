@@ -31,7 +31,7 @@ import { Toaster, toast } from "react-hot-toast";
 const Shop = () => {
   const token = getSellerToken();
   const decodedToken = decodeToken(token);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(
     localStorage.getItem("currentPage") || "dashboard"
   );
@@ -245,10 +245,10 @@ const Shop = () => {
               <li className="sellerLogout">
                 <Logout />
                 <Link
+                  to={"/"}
                   onClick={() => {
                     localStorage.removeItem("primepick-seller");
                     localStorage.removeItem("currentPage");
-                    navigate("/");
                   }}
                 >
                   Logout
