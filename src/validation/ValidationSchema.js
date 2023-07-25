@@ -79,15 +79,16 @@ const createProductSchema = Yup.object().shape({
     .required("Price is required"),
   discount: Yup.number()
     .typeError("Discount must be a number")
-    .required("Discount is required"),
+    .min(0, "Discount must be greater than 0%")
+    .max(80, "Discount must be less than 80%"),
   stock: Yup.number()
     .typeError("Stock must be a number")
+    .min(1, "Stock must be greater than 0")
     .required("Stock is required"),
-  colors: Yup.array()
-    .min(1, "Select at least one color")
-    .required("Colors are required"),
+  colors: Yup.array(),
   images: Yup.array()
     .min(1, "Upload at least one image")
+    .max(5, "Upload at most 5 images")
     .required("Images are required"),
 });
 export {
@@ -96,5 +97,5 @@ export {
   sellerLoginSchema,
   sellerRegisterSchema,
   sellerBasicDetailsSchema,
-  createProductSchema
+  createProductSchema,
 };

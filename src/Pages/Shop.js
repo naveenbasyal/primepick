@@ -22,6 +22,7 @@ import Profile from "../components/Seller/Profile";
 import Dashboard from "../components/Seller/Dashboard";
 import ShopInbox from "../components/Seller/ShopInbox";
 import axios from "axios";
+// ________ Token __________
 import getSellerToken from "../utils/getSellerToken";
 import { decodeToken } from "react-jwt";
 import SellerLoading from "../assets/sellerLoading.json";
@@ -31,7 +32,7 @@ import { Toaster, toast } from "react-hot-toast";
 const Shop = () => {
   const token = getSellerToken();
   const decodedToken = decodeToken(token);
-  // const navigate = useNavigate();
+  
   const [currentPage, setCurrentPage] = useState(
     localStorage.getItem("currentPage") || "dashboard"
   );
@@ -46,7 +47,7 @@ const Shop = () => {
     if (token && decodedToken.id) {
       getSellerData();
     }
-  }, [token]);
+  }, []);
   useEffect(() => {
     if (sellerProfile.address === "Store Address") {
       setDetailsOverlay(true);
