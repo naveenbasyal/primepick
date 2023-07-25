@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { RingLoader, PulseLoader } from "react-spinners";
 import { useJwt } from "react-jwt";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import { ToastBar, Toaster, toast } from "react-hot-toast";
 import axios from "axios";
 import Lottie from "lottie-react";
 
@@ -11,6 +11,15 @@ const StoreVerifyEmail = () => {
   const { token } = useParams();
   const { isExpired } = useJwt(token);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (isExpired) {
+      toast.error("Token Expired");
+      alert("Token Expired");
+      navigate("/login");
+    } else {
+      verifyEmail();
+    }
+  }, []);
 
   const verifyEmail = async () => {
     try {
@@ -26,18 +35,10 @@ const StoreVerifyEmail = () => {
       navigate("/shop-login");
     }
   };
-  useEffect(() => {
-    if (isExpired) {
-      toast.error("Token Expired");
-      alert("Token Expired");
-      // navigate("/login");
-    } else {
-      verifyEmail();
-    }
-  }, []);
 
   return (
     <div className="container pop centerall" style={{ height: "70vh" }}>
+      <Toaster />
       <div className="dim p-1 ">
         <Lottie
           animationData={VerifyEmailAnimation}

@@ -139,11 +139,14 @@ const Shop = () => {
     }
   };
 
+  // __________________ Edit user details _______________
+
   return (
     <>
       <Toaster />
       <div className="shop">
         <div className="row">
+          {/* _______ Taking Address Detials initially when seller makes an account ____ */}
           {detailsOverlay && (
             <div className="details-overlay">
               <div className="overlay-content mulish">
@@ -264,26 +267,35 @@ const Shop = () => {
                 className="loadingAnimation"
                 animationData={SellerLoading}
               />
-            ) : currentPage === "dashboard" ? (
+            ) : // _______________ Dashboard _______________
+            currentPage === "dashboard" ? (
               <Dashboard />
-            ) : currentPage === "profile" ? (
+            ) : // _______________ Profile _______________
+            currentPage === "profile" ? (
               <Profile
                 sellerProfile={sellerProfile}
                 setSellerProfile={setSellerProfile}
               />
-            ) : currentPage === "allOrders" ? (
+            ) : // _______________ All Orders _______________
+            currentPage === "allOrders" ? (
               <AllOrders />
-            ) : currentPage === "allProducts" ? (
+            ) : // _______________ All Products _______________
+            currentPage === "allProducts" ? (
               <AllProducts />
-            ) : currentPage === "createProduct" ? (
+            ) : // _______________ Create Product _______________
+            currentPage === "createProduct" ? (
               <CreateProduct />
-            ) : currentPage === "allEvents" ? (
+            ) : // _______________ All Events _______________
+            currentPage === "allEvents" ? (
               <AllEvents />
-            ) : currentPage === "createEvent" ? (
+            ) : // _______________ Create Event _______________
+            currentPage === "createEvent" ? (
               <CreateEvent />
-            ) : currentPage === "shopInbox" ? (
+            ) : // _______________ Shop Inbox _______________
+            currentPage === "shopInbox" ? (
               <ShopInbox />
-            ) : currentPage === "refunds" ? (
+            ) : // _______________ Refunds _______________
+            currentPage === "refunds" ? (
               <Refunds />
             ) : null}
           </div>

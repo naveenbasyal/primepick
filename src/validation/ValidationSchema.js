@@ -50,4 +50,51 @@ const sellerRegisterSchema = Yup.object({
   //   .required("Address is required"),
 });
 
-export { registerSchema, loginSchema, sellerLoginSchema, sellerRegisterSchema };
+//  _______________ Seller Basic Details Edit Overlay ______________
+const sellerBasicDetailsSchema = Yup.object({
+  shopName: Yup.string()
+    .min(3, "Must be 3 characters or more")
+    .required("Required"),
+  description: Yup.string()
+    .min(10, "Must be 10 characters or more")
+    .required("Required"),
+  address: Yup.string()
+    .min(8, "Must be 8 characters or more")
+    .required("Required"),
+  location: Yup.string()
+    .min(5, "Must be 5 characters or more")
+    .required("Required"),
+  phone: Yup.string()
+    .min(10, "Must be 10 characters or more")
+    .required("Required"),
+});
+
+//  ___________________ Create Product Schema ___________________
+const createProductSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  description: Yup.string().required("Description is required"),
+  category: Yup.string().required("Category is required"),
+  price: Yup.number()
+    .typeError("Price must be a number")
+    .required("Price is required"),
+  discount: Yup.number()
+    .typeError("Discount must be a number")
+    .required("Discount is required"),
+  stock: Yup.number()
+    .typeError("Stock must be a number")
+    .required("Stock is required"),
+  colors: Yup.array()
+    .min(1, "Select at least one color")
+    .required("Colors are required"),
+  images: Yup.array()
+    .min(1, "Upload at least one image")
+    .required("Images are required"),
+});
+export {
+  registerSchema,
+  loginSchema,
+  sellerLoginSchema,
+  sellerRegisterSchema,
+  sellerBasicDetailsSchema,
+  createProductSchema
+};

@@ -42,7 +42,9 @@ const Register = () => {
       return;
     }
     const data = await res.json();
-    toast.info(data.msg);
+    toast(data.msg,{
+      icon: '🚫',
+    });
   };
 
   return (
