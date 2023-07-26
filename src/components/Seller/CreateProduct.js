@@ -18,6 +18,7 @@ const CreateProduct = () => {
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [tagValue, setTagValue] = useState("");
   const [tags, setTags] = useState([]);
+  const [images, setImages] = useState([]);
   const initialValues = {
     name: "",
     description: "",
@@ -109,8 +110,40 @@ const CreateProduct = () => {
     "Gray",
   ];
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async(values) => {
     console.log(values);
+    console.log(images);
+const formData =  new FormData();
+formData.append("name", values.name);
+formData.append("description", values.description);
+formData.append("price", values.price);
+formData.append("category", values.category);
+formData.append("subCategory", values.subCategory);
+formData.append("discount", values.discount);
+formData.append("sellingPrice", values.sellingPrice);
+formData.append("pincodes", values.pincodes);
+formData.append("tags", values.tags);
+formData.append("sizes", values.sizes);
+formData.append("colors", values.colors);
+formData.append("stock", values.stock);
+for(let i = 0; i < images.length; i++){
+  formData.append("images", images[i]);
+}
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_URL}api/admin/createproduct`,
+      {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${JSON.parse(
+            localStorage.getItem("primepick-seller")
+          )}`,
+        },
+      }
+    );
+    const data = await res.json();
+    console.log(data);
+
   };
 
   return (
@@ -438,6 +471,7 @@ const CreateProduct = () => {
                     accept="image/*"
                     onChange={(e) => {
                       const files = Array.from(e.target.files);
+                      setImages(files);
                       const imageDataUrls = [];
                       const readFile = (file, index) => {
                         const reader = new FileReader();
