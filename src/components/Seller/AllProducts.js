@@ -49,7 +49,7 @@ const AllProducts = () => {
       };
       setLoading(true);
       const res = await axios.delete(
-        `${process.env.REACT_APP_SERVER_URL}api/admin/deleteproduct/${deleteProductId}`,
+        `${process.env.REACT_APP_SERVER_URL}api/store/deleteproduct/${deleteProductId}`,
         config
       );
       setSellerProducts(

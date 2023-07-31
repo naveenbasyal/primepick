@@ -72,10 +72,12 @@ const sellerBasicDetailsSchema = Yup.object({
 //  ___________________ Create Product Schema ___________________
 const createProductSchema = Yup.object().shape({
   name: Yup.string()
-    .min(3, "Name must be 3 characters or more")
+    .min(10, "Name must be 3 characters or more")
+    .max(200, "Name must be 200 characters or less")
     .required("Name is required"),
   description: Yup.string()
-    .min(50, "Description must be 50 characters or more")
+    .min(100, "Description must be 50 characters or more")
+    .max(300, "Description must be 300 characters or less")
     .required("Description is required"),
   category: Yup.string().required("Category is required"),
   subCategory: Yup.string().required("SubCategory is required"),

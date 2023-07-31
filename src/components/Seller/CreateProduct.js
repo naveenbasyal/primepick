@@ -139,6 +139,10 @@ const CreateProduct = () => {
     formData.append("discount", values.discount);
     formData.append("sellingPrice", values.sellingPrice);
     formData.append("pincodes", values.pincodes);
+    formData.append(
+      "productDetails",
+      "react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai "
+    );
     // for (let i = 0; i < tags.length; i++) {
     formData.append("tags", values.tags);
     // }
@@ -158,7 +162,7 @@ const CreateProduct = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}api/admin/createproduct`,
+        `${process.env.REACT_APP_SERVER_URL}api/store/createproduct`,
         {
           method: "POST",
           body: formData,
