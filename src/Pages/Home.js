@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const Home = () => {
-  return (
-    <div>
-        here we show all the products and the user can interact with them by loggin in first
-    </div>
-  )
-}
+  return <div className="centerh my-5">Home Page</div>;
+};
 
-export default Home
+export default Home;

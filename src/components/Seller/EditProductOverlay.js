@@ -15,31 +15,37 @@ import { SellerContext } from "../../Context/SellerProvider";
 import { FormHelperText, TextareaAutosize } from "@material-ui/core";
 
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
+import axios from "axios";
 
-const CreateProduct = () => {
+const EditProductOverlay = ({ product }) => {
   // ________ Context _______
   const { getSellerProducts } = useContext(SellerContext);
   // __________ States __________
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [tagValue, setTagValue] = useState("");
-  const [tags, setTags] = useState([]);
+
   const [loading, setLoading] = useState(false);
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState(product?.images);
   const initialValues = {
-    name: "",
-    description: "",
-    category: "",
-    subCategory: "",
-    price: "",
-    discount: 0,
-    sellingPrice: "",
-    tags: [],
-    sizes: [],
-    stock: "",
-    pincodes: [],
-    colors: [],
-    images: [],
+    name: product?.name,
+    description: product?.description,
+    category: product?.category,
+    subCategory: product?.subCategory,
+    price: product?.price,
+    discount: product?.discount,
+    sellingPrice: product?.sellingPrice,
+    tags: product?.tags,
+    sizes: product?.sizes,
+    stock: product?.stock,
+    pincodes: product?.pincodes,
+    colors: product?.colors,
+    images: product?.images,
+    productDetails:
+      "naveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenene",
   };
+
+  useEffect(() => {
+    console.log(product);
+  }, [product]);
 
   // _____________ Categories ______________
   const categories = [
@@ -125,11 +131,8 @@ const CreateProduct = () => {
     } else {
       values.pincodes = values.pincodes;
     }
-    if (values.tags.length === 0) {
-      toast.error("Please add atleast one tag");
-      return;
-    }
 
+    console.log(values);
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
@@ -139,9 +142,9 @@ const CreateProduct = () => {
     formData.append("discount", values.discount);
     formData.append("sellingPrice", values.sellingPrice);
     formData.append("pincodes", values.pincodes);
-    // for (let i = 0; i < tags.length; i++) {
+    formData.append("productDetails", values.productDetails);
+
     formData.append("tags", values.tags);
-    // }
 
     for (let i = 0; i < values.sizes.length; i++) {
       formData.append("sizes", values.sizes[i]);
@@ -157,32 +160,31 @@ const CreateProduct = () => {
 
     try {
       setLoading(true);
-      const res = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}api/admin/createproduct`,
+      const res = await axios.put(
+        `${process.env.REACT_APP_SERVER_URL}api/admin/updateProduct/${product?._id}`,
         {
-          method: "POST",
           body: formData,
           headers: {
             Authorization: `Bearer ${JSON.parse(
               localStorage.getItem("primepick-seller")
             )}`,
           },
-        }
+        }  
       );
-      const data = await res.json();
-      console.log(data);
-      if (data.msg === "Product created successfully.") {
-        toast.success("Product created successfully");
-        resetForm();
-        setTags([]);
-        setImages([]);
-        setTagValue("");
-        setSelectedCategory("");
-      }
+
+      console.log(res.data);
+      //   if (data.msg === "Product Updated successfully.") {
+      //     toast.success("Product Updated successfully");
+      //     resetForm();
+      //     setTags([]);
+      //     setImages([]);
+      //     setTagValue("");
+      //     setSelectedCategory("");
+      //   }
       setLoading(false);
-      getSellerProducts();
+      //   getSellerProducts();
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data);
       setLoading(false);
       toast.error("Something went wrong");
     }
@@ -197,7 +199,6 @@ const CreateProduct = () => {
   return (
     <div className="createProduct my-3 mulish">
       <Toaster />
-      <h3 className="centerh">Create Product</h3>
       <Formik
         initialValues={initialValues}
         validationSchema={createProductSchema}
@@ -211,7 +212,7 @@ const CreateProduct = () => {
           errors,
           touched,
         }) => (
-          <Form>
+          <Form style={{ display: "grid", rowGap: "2rem" }}>
             {/* _________ Product Name _________ */}
             <div className="form-field">
               <TextField
@@ -288,101 +289,30 @@ const CreateProduct = () => {
               </FormControl>
             </div>
             {/* _________ Sub Category _________ */}
-            {selectedCategory && (
-              <div className="form-field">
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Sub Category</InputLabel>
-                  <Select
-                    label="Sub Category"
-                    name="subCategory"
-                    value={values.subCategory}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={Boolean(errors.subCategory && touched.subCategory)}
-                  >
-                    {subCategoriesMap[selectedCategory].map((subCategory) => (
-                      <MenuItem key={subCategory} value={subCategory}>
-                        {subCategory}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.subCategory && touched.subCategory && (
-                    <p
-                      className="text-danger ms-2"
-                      style={{ fontSize: "14px" }}
-                    >
-                      <ErrorMessage name="subCategory" />
-                    </p>
-                  )}
-                </FormControl>
-              </div>
-            )}
-            {/* ______________ Tags ____________ */}
+
             <div className="form-field">
-              <TextField
-                fullWidth
-                variant="outlined"
-                name="tags"
-                label="Tags"
-                value={tagValue}
-                onChange={(e) => {
-                  setTagValue(e.target.value);
-                  handleChange(e);
-                }}
-                onBlur={handleBlur}
-                error={Boolean(errors.tags && touched.tags)}
-                helperText={"Tags are necessary for better search results"}
-                InputProps={{
-                  endAdornment: (
-                    <Add
-                      style={{
-                        cursor: "pointer",
-                        backgroundColor: "#f3f3f3",
-                        fontSize: "2rem",
-                        borderRadius: "4px",
-                      }}
-                      onClick={() => {
-                        if (tagValue) {
-                          if (tags.includes(tagValue)) {
-                            toast.error("Tag already exists");
-                            return;
-                          }
-                          setTags([...tags, tagValue]);
-                          setTagValue("");
-                          setFieldValue("tags", [...tags, tagValue]);
-                        }
-                      }}
-                    />
-                  ),
-                }}
-              />
-
-              {/*  _____________ Tags Mapping ____________ */}
-              <div className="tags my-2 d-flex flex-wrap">
-                {tags.map((tag, index) => {
-                  return (
-                    <span
-                      key={index}
-                      className="d-flex justify-content-between align-items-center"
-                    >
-                      <span className="tag m-2">
-                        {tag}
-
-                        <span
-                          className="removeTag"
-                          onClick={() => {
-                            const newTags = tags.filter((t) => t !== tag);
-                            setTags(newTags);
-                            setFieldValue("tags", newTags);
-                          }}
-                        >
-                          <Clear />
-                        </span>
-                      </span>
-                    </span>
-                  );
-                })}
-              </div>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel>Sub Category</InputLabel>
+                <Select
+                  label="Sub Category"
+                  name="subCategory"
+                  value={values.subCategory}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={Boolean(errors.subCategory && touched.subCategory)}
+                >
+                  {subCategoriesMap[values.category].map((subCategory) => (
+                    <MenuItem key={subCategory} value={subCategory}>
+                      {subCategory}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.subCategory && touched.subCategory && (
+                  <p className="text-danger ms-2" style={{ fontSize: "14px" }}>
+                    <ErrorMessage name="subCategory" />
+                  </p>
+                )}
+              </FormControl>
             </div>
 
             {/* ______________ Sizes ____________ */}
@@ -412,101 +342,81 @@ const CreateProduct = () => {
               </div>
             )}
             {/* _________ Product Price _________ */}
-            <div
-              className="row justify-content-between"
-              style={{ height: "inherit" }}
-            >
-              <div
-                className="col-lg-6 col-md-6 col-sm-12 ps-0"
-                style={{ backgroundColor: "#fff" }}
-              >
-                <div className="form-field">
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Price"
-                    name="price"
-                    value={values.price}
-                    onChange={handleChange}
-                    onBlur={() => {
-                      setFieldValue(
-                        "sellingPrice",
-                        values.price - (values.price * values.discount) / 100
-                      );
-                    }}
-                    error={Boolean(errors.price && touched.price)}
-                    helperText={<ErrorMessage name="price" />}
-                  />
-                </div>
-              </div>
-              {/* _________ Product Discount _________ */}
-              <div
-                className="col-lg-6 col-md-6 col-sm-12 pe-0"
-                style={{ backgroundColor: "#fff" }}
-              >
-                <div className="form-field">
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Discount"
-                    name="discount"
-                    value={values.discount}
-                    onChange={(e) => {
-                      handleChange(e);
-                    }}
-                    onBlur={() => {
-                      setFieldValue(
-                        "sellingPrice",
-                        values.price - (values.price * values.discount) / 100
-                      );
-                    }}
-                    error={Boolean(errors.discount && touched.discount)}
-                    helperText={<ErrorMessage name="discount" />}
-                  />
-                </div>
-              </div>
+
+            <div className="form-field">
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Price"
+                name="price"
+                value={values.price}
+                onChange={handleChange}
+                onBlur={() => {
+                  setFieldValue(
+                    "sellingPrice",
+                    values.price - (values.price * values.discount) / 100
+                  );
+                }}
+                error={Boolean(errors.price && touched.price)}
+                helperText={<ErrorMessage name="price" />}
+              />
             </div>
-            <div className="row" style={{ height: "inherit" }}>
-              {/* _________ SELLING PRICE _________ */}
-              <div
-                className="col-lg-6 col-md-6 col-sm-12 ps-0"
-                style={{ backgroundColor: "#fff" }}
-              >
-                <div className="form-field">
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Selling Price"
-                    name="sellingPrice"
-                    disabled
-                    value={values.sellingPrice}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={Boolean(errors.sellingPrice && touched.sellingPrice)}
-                    helperText={<ErrorMessage name="sellingPrice" />}
-                  />
-                </div>
-              </div>
-              {/* _________ Product Stock _________ */}
-              <div
-                className="col-lg-6 col-md-6 col-sm-12 pe-0"
-                style={{ backgroundColor: "#fff" }}
-              >
-                <div className="form-field">
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Stock"
-                    name="stock"
-                    value={values.stock}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={Boolean(errors.stock && touched.stock)}
-                    helperText={<ErrorMessage name="stock" />}
-                  />
-                </div>
-              </div>
+
+            {/* _________ Product Discount _________ */}
+
+            <div className="form-field">
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Discount"
+                name="discount"
+                value={values.discount}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+                onBlur={() => {
+                  setFieldValue(
+                    "sellingPrice",
+                    values.price - (values.price * values.discount) / 100
+                  );
+                }}
+                error={Boolean(errors.discount && touched.discount)}
+                helperText={<ErrorMessage name="discount" />}
+              />
             </div>
+
+            {/* _________ SELLING PRICE _________ */}
+
+            <div className="form-field">
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Selling Price"
+                name="sellingPrice"
+                disabled
+                value={values.sellingPrice}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={Boolean(errors.sellingPrice && touched.sellingPrice)}
+                helperText={<ErrorMessage name="sellingPrice" />}
+              />
+            </div>
+
+            {/* _________ Product Stock _________ */}
+            <div className="form-field">
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Stock"
+                name="stock"
+                value={values.stock}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={Boolean(errors.stock && touched.stock)}
+                helperText={<ErrorMessage name="stock" />}
+              />
+            </div>
+
             {/*  ____________ Pincodes ___________ */}
             <div className="form-field">
               <TextField
@@ -518,14 +428,13 @@ const CreateProduct = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={Boolean(errors.pincodes && touched.pincodes)}
-                helperText={
-                  values.pincodes.length === 0 ? (
-                    "Leave empty for all India delivery - or - Separate pincodes with commas"
-                  ) : (
-                    <ErrorMessage name="pincodes" />
-                  )
-                }
+                helperText={<ErrorMessage name="pincodes" />}
               />
+
+              <p className="text-secondary ms-2" style={{ fontSize: "14px" }}>
+                "Leave empty for all India delivery - or - Separate pincodes
+                with commas"
+              </p>
             </div>
 
             {/* ___________Colors ________________ */}
@@ -596,10 +505,16 @@ const CreateProduct = () => {
                       return (
                         <div
                           className="image-preview"
+                          style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: "10px",
+                            marginTop: "10px",
+                          }}
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                         >
-                          {images.map((imageUrl, index) => (
+                          {images?.map((img, index) => (
                             <Draggable
                               key={index}
                               draggableId={index.toString()}
@@ -608,21 +523,43 @@ const CreateProduct = () => {
                               {(provided) => {
                                 return (
                                   <div
-                                    className="image-preview-item"
+                                    className="image-preview-item position-relative"
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                     ref={provided.innerRef}
                                   >
                                     <img
-                                      src={URL.createObjectURL(imageUrl)}
+                                      src={img}
                                       alt={`Image ${index + 1}`}
                                       className="preview-image"
+                                      style={{
+                                        width: "100px",
+                                        height: "100px",
+                                        objectFit: "contain",
+                                        border: "1px solid #ccc",
+                                        borderRadius: "5px",
+                                      }}
                                     />
                                     <Clear
-                                      className="remove-image"
+                                      className="remove-image position-absolute"
+                                      style={{
+                                        top: "5px",
+                                        right: "5px",
+                                        backgroundColor: "red",
+                                        color: "#fff",
+                                        border: "none",
+                                        borderRadius: "50%",
+                                        width: "20px",
+                                        height: "20px",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        cursor: "pointer",
+                                        fontSize: "15px",
+                                      }}
                                       onClick={() => {
                                         const updatedImages = images.filter(
-                                          (img) => img.name !== imageUrl.name
+                                          (image) => image !== img
                                         );
                                         setImages(updatedImages);
                                         setFieldValue("images", updatedImages);
@@ -654,7 +591,7 @@ const CreateProduct = () => {
             {/* _______________ Submit Button ___________________ */}
             <div className="form-field">
               <Button variant="contained" disabled={loading} type="submit">
-                {loading ? "Creating Product..." : "Create Product"}
+                {loading ? "Updating Product..." : "Update Product"}
               </Button>
             </div>
           </Form>
@@ -664,4 +601,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default EditProductOverlay;

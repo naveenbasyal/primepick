@@ -12,7 +12,6 @@
   box-shadow: 0px 0px 5px 0px rgba(190, 190, 190, 0.1);
   padding: 2rem;
   border-radius: 10px;
-  
 }
 
 /* Handle */
@@ -28,7 +27,14 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+.previewLoading {
+  height: calc(100vh - 90px);
+  display: flex;
+  justify-content: center;
+  svg {
+    width: 35% !important;
+  }
+}
 @mixin color {
   color: #360b0e !important;
 }

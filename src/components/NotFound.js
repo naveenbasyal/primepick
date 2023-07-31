@@ -5,7 +5,7 @@ const NotFound = () => {
   return (
     <div className="px-5">
       <div className="row centerall">
-        <div class="col-lg-8 col-md-10 col-sm-12">
+        <div className="col-lg-8 col-md-10 col-sm-12">
           <Lottie animationData={NotFoundAnimation} />
         </div>
       </div>

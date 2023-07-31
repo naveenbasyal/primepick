@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link, useFetcher, useLocation } from "react-router-dom";
 import "../Styles/Navbar.scss";
 import { Button, TextField } from "@material-ui/core";
@@ -15,11 +15,14 @@ import getToken from "../utils/getToken";
 import sellerToken from "../utils/getSellerToken";
 import { Login } from "@mui/icons-material";
 
+import { SellerContext } from "../Context/SellerProvider";
+
 const Navbar = () => {
+  const { sellerLogin, sellerProfile } = useContext(SellerContext);
   const token = getToken();
-  const seller = sellerToken();
+
   const searchRef = useRef(null);
-  // States ---------------------->
+  // _____________ States __________________
   const [hamburOverlay, setHamBurOverlay] = useState(false);
   const [productOverlay, setProductOverlay] = useState(false);
   const [brandOverlay, setBrandOverlay] = useState(false);
@@ -344,18 +347,21 @@ const Navbar = () => {
                 <ShoppingCart />
               </Link>
             </li>
-            {seller ? (
+            {sellerLogin && sellerProfile.logo ? (
               <li className="navUser-item">
                 <Link
-                  title="Shop"
+                  title="Shop "
                   to="/shop"
                   onClick={() => {
                     localStorage.setItem("currentPage", "dashboard");
                   }}
-                  className="main-bg-color text-white p-2"
-                  style={{ borderRadius: "3px" }}
+                  className="image_container_shop"
                 >
-                  Go to Shop
+                  <img
+                    src={sellerProfile.logo}
+                    className="shop_logo_navbar"
+                    loading="lazy"
+                  />
                 </Link>
               </li>
             ) : (
@@ -363,7 +369,7 @@ const Navbar = () => {
                 <Link
                   title="Become a seller"
                   className="main-bg-color text-white p-2"
-                  to={"/create-shop"}
+                  to={"/shop-login"}
                   style={{ borderRadius: "3px" }}
                 >
                   Become a seller

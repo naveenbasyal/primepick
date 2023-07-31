@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import EditProfileOverlay from "./EditProfileOverlay";
-import { parseISO, format ,isValid} from "date-fns";
+import { parseISO, format, isValid } from "date-fns";
 
 const Profile = ({ sellerProfile, setSellerProfile }) => {
   const [toggleEdit, setToggleEdit] = useState(false);
@@ -14,10 +14,7 @@ const Profile = ({ sellerProfile, setSellerProfile }) => {
     logo,
     description,
   } = sellerProfile;
-  const parsedCreatedAt = parseISO(createdAt);
-  const formattedCreatedAt = isValid(parsedCreatedAt)
-    ? format(parsedCreatedAt, "dd/MMM/yyyy")
-    : "Invalid date";
+
   return (
     <div className="profile position-relative">
       {toggleEdit && (
@@ -59,7 +56,12 @@ const Profile = ({ sellerProfile, setSellerProfile }) => {
       </div>
       <div className="section">
         <span>Joined On :</span>
-        <p> {formattedCreatedAt}</p>
+        <p>
+        
+          {isValid(parseISO(createdAt))
+            ? format(parseISO(createdAt), "dd/MMM/yyyy")
+            : "Invalid date"}
+        </p>
       </div>
     </div>
   );

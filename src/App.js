@@ -18,6 +18,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Cart from "./Pages/Cart";
 import { Toaster } from "react-hot-toast";
 import StoreVerifyEmail from "./Pages/StoreVerifyEmail";
+import ProductPreview from "./Pages/ProductPreview";
 
 const App = () => {
   return (
@@ -40,6 +41,10 @@ const App = () => {
 
         {/* ___________ SHOP ___________ */}
         <Route path="/shop" element={<Shop />} />
+    
+        {/* _________Product Preview __________ */}
+
+        <Route path="/product/:productName/:productId" element={<ProductPreview />} />
 
         {/* ____Auth____ */}
         <Route path="/login" element={<Login />} />

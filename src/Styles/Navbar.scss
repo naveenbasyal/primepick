@@ -7,7 +7,18 @@
   align-items: center;
   justify-content: center;
 }
-
+.image_container_shop {
+  padding: 0.1rem 0.1rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0.2rem #fff, 0 0.2rem 0.2rem 0.2rem #cccce1;
+  .shop_logo_navbar {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: block;
+  }
+}
 .center {
   display: flex;
   align-items: center;

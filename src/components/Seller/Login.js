@@ -1,12 +1,14 @@
 import { Checkbox } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../Styles/Seller.scss";
 import { Toaster, toast } from "react-hot-toast";
 import { useFormik } from "formik";
 import { sellerLoginSchema } from "../../validation/ValidationSchema";
+import { SellerContext } from "../../Context/SellerProvider";
 
 const Login = () => {
+  const { setSellerLogin, getSellerData } = useContext(SellerContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const formik = useFormik({
@@ -34,13 +36,14 @@ const Login = () => {
         }
       );
       const data = await res.json();
-      
+
       localStorage.setItem("primepick-seller", JSON.stringify(data.data.token));
-      navigate("/shop");
+      setSellerLogin(true);
       toast.success("Login Successful");
       setLoading(false);
+      getSellerData(data.data.token);
+      navigate("/shop");
     } catch (error) {
-      // Handle any errors that occurred during the async operation
       console.error("An error occurred:", error.message);
       setLoading(false);
       toast.error(" Invalid Credentials");
@@ -113,6 +116,15 @@ const Login = () => {
               >
                 {loading ? "Loading . . ." : "Login"}
               </button>
+            </div>
+            {/* _____ Register Link _____ */}
+            <div className="form-group">
+              <p className="centerv">
+                Don't have an account?{" "}
+                <Link to="/create-shop" className="main-color ms-2">
+                  Register
+                </Link>
+              </p>
             </div>
           </form>
         </div>

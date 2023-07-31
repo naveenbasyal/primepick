@@ -71,9 +71,14 @@ const sellerBasicDetailsSchema = Yup.object({
 
 //  ___________________ Create Product Schema ___________________
 const createProductSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  description: Yup.string().required("Description is required"),
+  name: Yup.string()
+    .min(3, "Name must be 3 characters or more")
+    .required("Name is required"),
+  description: Yup.string()
+    .min(50, "Description must be 50 characters or more")
+    .required("Description is required"),
   category: Yup.string().required("Category is required"),
+  subCategory: Yup.string().required("SubCategory is required"),
   price: Yup.number()
     .typeError("Price must be a number")
     .required("Price is required"),
@@ -85,10 +90,12 @@ const createProductSchema = Yup.object().shape({
     .typeError("Stock must be a number")
     .min(1, "Stock must be greater than 0")
     .required("Stock is required"),
-  colors: Yup.array(),
+
+  pincode: Yup.string().matches(/^[0-9,]*$/, "Pincode must be a number"),
+
   images: Yup.array()
     .min(1, "Upload at least one image")
-    .max(5, "Upload at most 5 images")
+    .max(3, "Cannot upload more than 3 images")
     .required("Images are required"),
 });
 export {

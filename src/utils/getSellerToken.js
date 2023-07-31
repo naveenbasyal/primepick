@@ -5,7 +5,7 @@ const getSellerToken = () => {
   if (token) {
     const decodedToken = decodeToken(token);
 
-    if (!decodedToken || !decodedToken.id || isExpired(token)) {
+    if (!decodedToken || isExpired(token)) {
       localStorage.removeItem("primepick-seller");
       return null;
     }
