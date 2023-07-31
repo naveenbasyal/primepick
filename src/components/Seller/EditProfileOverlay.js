@@ -50,7 +50,9 @@ const EditProfileOverlay = ({
           )}`,
         },
       };
+
       const formData = new FormData();
+
       formData.append("shopName", formik.values.shopName);
       formData.append("description", formik.values.description);
       formData.append("address", formik.values.address);

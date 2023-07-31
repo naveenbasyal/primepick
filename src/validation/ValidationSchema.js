@@ -72,7 +72,7 @@ const sellerBasicDetailsSchema = Yup.object({
 //  ___________________ Create Product Schema ___________________
 const createProductSchema = Yup.object().shape({
   name: Yup.string()
-    .min(10, "Name must be 3 characters or more")
+    .min(10, "Name must be 10 characters or more")
     .max(200, "Name must be 200 characters or less")
     .required("Name is required"),
   description: Yup.string()
@@ -83,6 +83,7 @@ const createProductSchema = Yup.object().shape({
   subCategory: Yup.string().required("SubCategory is required"),
   price: Yup.number()
     .typeError("Price must be a number")
+    .min(0, "Price Must be greater than 0")
     .required("Price is required"),
   discount: Yup.number()
     .typeError("Discount must be a number")

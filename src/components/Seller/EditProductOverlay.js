@@ -141,16 +141,11 @@ const EditProductOverlay = ({ product }) => {
     formData.append("productDetails", values.productDetails);
     formData.append("stock", values.stock);
     formData.append("tags", values.tags);
-
     for (let i = 0; i < values.sizes.length; i++) {
       formData.append("sizes", values.sizes[i]);
     }
     for (let i = 0; i < values.colors.length; i++) {
       formData.append("colors", values.colors[i]);
-    }
-
-    for (let i = 0; i < images.length; i++) {
-      formData.append("images", images[i]);
     }
 
     try {
@@ -215,6 +210,7 @@ const EditProductOverlay = ({ product }) => {
             </div>
             {/* _________ Product Description _________ */}
             <div className="form-field">
+              <InputLabel>Product Description</InputLabel>
               <FormControl
                 fullWidth
                 error={Boolean(errors.description && touched.description)}
@@ -228,13 +224,41 @@ const EditProductOverlay = ({ product }) => {
                   minRows={4}
                   style={{ borderRadius: "5px", padding: ".5rem .5rem" }}
                   maxRows={8}
-                  placeholder="Description"
                   name="description"
                   value={values.description}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
                 {errors.description && touched.description && (
+                  <FormHelperText className="text-danger">
+                    {errors.description}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </div>
+            {/* _________ Product Details _________ */}
+            <div className="form-field">
+              <InputLabel>Product Details</InputLabel>
+              <FormControl
+                fullWidth
+                error={Boolean(errors.productDetails && touched.productDetails)}
+              >
+                <TextareaAutosize
+                  className={`${
+                    errors.productDetails &&
+                    touched.productDetails &&
+                    "border-red px-3"
+                  }`}
+                  minRows={4}
+                  style={{ borderRadius: "5px", padding: ".5rem .5rem" }}
+                  maxRows={8}
+                  placeholder="write details in more than 200 characters"
+                  name="productDetails"
+                  value={values.productDetails}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+                {errors.productDetails && touched.productDetails && (
                   <FormHelperText className="text-danger">
                     {errors.description}
                   </FormHelperText>

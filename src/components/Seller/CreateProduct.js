@@ -36,9 +36,8 @@ const CreateProduct = () => {
     tags: [],
     sizes: [],
     stock: "",
-    productDetails:
-      "This is a dummy This is a dummy This is a dummy This is a dummy This is a dummy written for the product details This is a dummy written for the product details This is a dummy written for the product details This is a dummy written for the product details ",
-    pincodes: ["All India Service"],
+    productDetails: "",
+    pincodes: [""],
     colors: [],
     images: [],
   };
@@ -120,7 +119,14 @@ const CreateProduct = () => {
   ];
 
   const handleSubmit = async (values, { resetForm }) => {
+    if (!values.pincodes) {
+      values.pincodes = "All India Delivery";
+    } else if (values.pincodes.includes(",")) {
+      values.pincodes = values.pincodes.split(",");
+    }
+
     console.log(values);
+
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
@@ -130,11 +136,8 @@ const CreateProduct = () => {
     formData.append("discount", values.discount);
     formData.append("sellingPrice", values.sellingPrice);
     formData.append("pincodes", values.pincodes);
-    // formData.append(
-    //   "productDetails",
-    //   "react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai "
-    // );
-    // for (let i = 0; i < tags.length; i++) {
+    // formData.append("productDetails", values.productDetails);
+
     formData.append("productDetails", values.productDetails);
     formData.append("tags", values.tags);
     for (let i = 0; i < values.sizes.length; i++) {
@@ -222,6 +225,7 @@ const CreateProduct = () => {
             </div>
             {/* _________ Product Description _________ */}
             <div className="form-field">
+              <InputLabel>Product Description</InputLabel>
               <FormControl
                 fullWidth
                 error={Boolean(errors.description && touched.description)}
@@ -235,7 +239,6 @@ const CreateProduct = () => {
                   minRows={4}
                   style={{ borderRadius: "5px", padding: ".5rem .5rem" }}
                   maxRows={8}
-                  placeholder="Description"
                   name="description"
                   value={values.description}
                   onChange={handleChange}
@@ -244,6 +247,34 @@ const CreateProduct = () => {
                 {errors.description && touched.description && (
                   <FormHelperText className="text-danger">
                     {errors.description}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </div>
+            {/* _________ Product Details _________ */}
+            <div className="form-field">
+              <InputLabel>Product Details</InputLabel>
+              <FormControl
+                fullWidth
+                error={Boolean(errors.productDetails && touched.productDetails)}
+              >
+                <TextareaAutosize
+                  className={`${
+                    errors.productDetails &&
+                    touched.productDetails &&
+                    "border-red px-3"
+                  }`}
+                  minRows={4}
+                  style={{ borderRadius: "5px", padding: ".5rem .5rem" }}
+                  maxRows={8}
+                  name="productDetails"
+                  value={values.productDetails}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+                {errors.productDetails && touched.productDetails && (
+                  <FormHelperText className="text-danger">
+                    {errors.productDetails}
                   </FormHelperText>
                 )}
               </FormControl>

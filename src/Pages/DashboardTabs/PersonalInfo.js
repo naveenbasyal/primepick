@@ -45,7 +45,9 @@ const PersonalInfo = (props) => {
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("primepick")
+            )}`,
           },
           body: formData,
         }

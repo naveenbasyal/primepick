@@ -64,7 +64,9 @@ const Address = (props) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${JSON.parse(
+            localStorage.getItem("primepick")
+          )}`,
           "Content-Type": "application/json",
         },
       };
