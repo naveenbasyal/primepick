@@ -60,7 +60,7 @@ const EditProfileOverlay = ({
 
       setLoading(true);
       const res = await axios.put(
-        `${process.env.REACT_APP_SERVER_URL}api/admin/update`,
+        `${process.env.REACT_APP_SERVER_URL}api/store/update`,
         formData,
         config
       );

@@ -42,8 +42,6 @@ const Dashboard = () => {
   }, [token]);
   //  _________ GET USER DATA _____________
   const getUserData = async () => {
-    console.log(decodeToken(token).id)
-    console.log(token);
     try {
       const config = {
         headers: {
@@ -51,11 +49,11 @@ const Dashboard = () => {
         },
       };
       const res = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}api/user/${decodeToken(token).id}`,
+        `${process.env.REACT_APP_SERVER_URL}api/user/userinfo`,
         config
       );
       const userData = res.data;
-      setUser(userData);
+      setUser(userData.data);
     } catch (err) {
       console.log(err.response);
     }

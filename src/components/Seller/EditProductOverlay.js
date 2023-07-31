@@ -40,12 +40,8 @@ const EditProductOverlay = ({ product }) => {
     colors: product?.colors,
     images: product?.images,
     productDetails:
-      "naveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenenenaveenbasyalnavenene",
+      "This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name ",
   };
-
-  useEffect(() => {
-    console.log(product);
-  }, [product]);
 
   // _____________ Categories ______________
   const categories = [
@@ -143,7 +139,7 @@ const EditProductOverlay = ({ product }) => {
     formData.append("sellingPrice", values.sellingPrice);
     formData.append("pincodes", values.pincodes);
     formData.append("productDetails", values.productDetails);
-
+    formData.append("stock", values.stock);
     formData.append("tags", values.tags);
 
     for (let i = 0; i < values.sizes.length; i++) {
@@ -152,7 +148,6 @@ const EditProductOverlay = ({ product }) => {
     for (let i = 0; i < values.colors.length; i++) {
       formData.append("colors", values.colors[i]);
     }
-    formData.append("stock", values.stock);
 
     for (let i = 0; i < images.length; i++) {
       formData.append("images", images[i]);
@@ -161,28 +156,19 @@ const EditProductOverlay = ({ product }) => {
     try {
       setLoading(true);
       const res = await axios.put(
-        `${process.env.REACT_APP_SERVER_URL}api/admin/updateProduct/${product?._id}`,
+        `${process.env.REACT_APP_SERVER_URL}api/store/updateproduct/${product?._id}`,
         {
-          body: formData,
+          body: values,
           headers: {
             Authorization: `Bearer ${JSON.parse(
               localStorage.getItem("primepick-seller")
             )}`,
           },
-        }  
+        }
       );
 
       console.log(res.data);
-      //   if (data.msg === "Product Updated successfully.") {
-      //     toast.success("Product Updated successfully");
-      //     resetForm();
-      //     setTags([]);
-      //     setImages([]);
-      //     setTagValue("");
-      //     setSelectedCategory("");
-      //   }
       setLoading(false);
-      //   getSellerProducts();
     } catch (err) {
       console.log(err.response.data);
       setLoading(false);

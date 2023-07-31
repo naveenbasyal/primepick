@@ -10,7 +10,7 @@ import {
   Person2Rounded,
   SupervisedUserCircle,
 } from "@mui/icons-material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 const PersonalInfo = (props) => {
@@ -51,6 +51,7 @@ const PersonalInfo = (props) => {
         }
       );
       const updatedUser = await res.json();
+      console.log(updatedUser);
       setWaiting(false);
 
       if (updatedUser.user) {

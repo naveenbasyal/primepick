@@ -36,7 +36,9 @@ const CreateProduct = () => {
     tags: [],
     sizes: [],
     stock: "",
-    pincodes: [],
+    productDetails:
+      "This is a dummy This is a dummy This is a dummy This is a dummy This is a dummy written for the product details This is a dummy written for the product details This is a dummy written for the product details This is a dummy written for the product details ",
+    pincodes: ["All India Service"],
     colors: [],
     images: [],
   };
@@ -118,18 +120,7 @@ const CreateProduct = () => {
   ];
 
   const handleSubmit = async (values, { resetForm }) => {
-    if (!values.pincodes) {
-      values.pincodes = "All india service";
-    } else if (values.pincodes.includes(",")) {
-      values.pincodes = values.pincodes.split(",");
-    } else {
-      values.pincodes = values.pincodes;
-    }
-    if (values.tags.length === 0) {
-      toast.error("Please add atleast one tag");
-      return;
-    }
-
+    console.log(values);
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
@@ -139,14 +130,13 @@ const CreateProduct = () => {
     formData.append("discount", values.discount);
     formData.append("sellingPrice", values.sellingPrice);
     formData.append("pincodes", values.pincodes);
-    formData.append(
-      "productDetails",
-      "react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai "
-    );
+    // formData.append(
+    //   "productDetails",
+    //   "react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai react quill ka pta hai "
+    // );
     // for (let i = 0; i < tags.length; i++) {
+    formData.append("productDetails", values.productDetails);
     formData.append("tags", values.tags);
-    // }
-
     for (let i = 0; i < values.sizes.length; i++) {
       formData.append("sizes", values.sizes[i]);
     }
