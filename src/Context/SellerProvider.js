@@ -40,9 +40,7 @@ const SellerProvider = ({ children }) => {
         sellerDataLoading: true,
       });
       const res = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}api/admin/store/${
-          decodeToken(localStorage.getItem("primepick-seller")).id
-        }`,
+        `${process.env.REACT_APP_SERVER_URL}api/store/`,
         config
       );
       const userData = res.data.data;
@@ -68,7 +66,7 @@ const SellerProvider = ({ children }) => {
         },
       };
       const res = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}api/admin/products/`,
+        `${process.env.REACT_APP_SERVER_URL}api/store/products/`,
         config
       );
       const products = res.data.data;

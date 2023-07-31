@@ -36,7 +36,9 @@ const CreateProduct = () => {
     tags: [],
     sizes: [],
     stock: "",
-    pincodes: [],
+    productDetails:
+      "This is a dummy This is a dummy This is a dummy This is a dummy This is a dummy written for the product details This is a dummy written for the product details This is a dummy written for the product details This is a dummy written for the product details ",
+    pincodes: ["All India Service"],
     colors: [],
     images: [],
   };
@@ -118,18 +120,7 @@ const CreateProduct = () => {
   ];
 
   const handleSubmit = async (values, { resetForm }) => {
-    if (!values.pincodes) {
-      values.pincodes = "All india service";
-    } else if (values.pincodes.includes(",")) {
-      values.pincodes = values.pincodes.split(",");
-    } else {
-      values.pincodes = values.pincodes;
-    }
-    if (values.tags.length === 0) {
-      toast.error("Please add atleast one tag");
-      return;
-    }
-
+    console.log(values);
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
@@ -139,10 +130,8 @@ const CreateProduct = () => {
     formData.append("discount", values.discount);
     formData.append("sellingPrice", values.sellingPrice);
     formData.append("pincodes", values.pincodes);
-    // for (let i = 0; i < tags.length; i++) {
+    formData.append("productDetails", values.productDetails);
     formData.append("tags", values.tags);
-    // }
-
     for (let i = 0; i < values.sizes.length; i++) {
       formData.append("sizes", values.sizes[i]);
     }
@@ -158,7 +147,7 @@ const CreateProduct = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}api/admin/createproduct`,
+        `${process.env.REACT_APP_SERVER_URL}api/store/createproduct`,
         {
           method: "POST",
           body: formData,

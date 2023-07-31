@@ -26,7 +26,7 @@ const Login = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}api/admin/login`,
+        `${process.env.REACT_APP_SERVER_URL}api/store/login`,
         {
           method: "POST",
           headers: {
