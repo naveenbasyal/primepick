@@ -9,7 +9,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { Add, Clear, PhotoCamera } from "@mui/icons-material";
+import { Add, AddAPhoto, Clear, PhotoCamera } from "@mui/icons-material";
 import { Toaster, toast } from "react-hot-toast";
 import { SellerContext } from "../../Context/SellerProvider";
 import { FormHelperText, TextareaAutosize } from "@material-ui/core";
@@ -571,7 +571,7 @@ const CreateProduct = () => {
             {/* _______________ Upload Images ___________________ */}
             <div className="form-field">
               <>
-                {images.length < 3 && (
+                {images.length < 1 && (
                   <Button
                     variant="contained"
                     component="label"
@@ -590,6 +590,15 @@ const CreateProduct = () => {
                           (file) =>
                             !images.some((img) => file.name === img.name)
                         );
+                        const oversizedFiles = filteredFiles.filter(
+                          (file) => file.size <= 3 * 1024 * 1024
+                        );
+
+                        if (oversizedFiles.length < filteredFiles.length) {
+                          toast.error("Image should be less than 3MB.");
+                          return;
+                        }
+
                         setImages((prevImages) => [
                           ...prevImages,
                           ...filteredFiles,
@@ -609,57 +618,102 @@ const CreateProduct = () => {
                 </span>
 
                 {/* _________ Image Preview ___________ */}
-                <DragDropContext onDragEnd={handleDragEnd}>
-                  <Droppable droppableId="image-preview">
-                    {(provided) => {
-                      return (
-                        <div
-                          className="image-preview"
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                        >
-                          {images.map((imageUrl, index) => (
-                            <Draggable
-                              key={index}
-                              draggableId={index.toString()}
-                              index={index}
-                            >
-                              {(provided) => {
-                                return (
-                                  <div
-                                    className="image-preview-item"
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    ref={provided.innerRef}
-                                  >
-                                    <img
-                                      src={URL.createObjectURL(imageUrl)}
-                                      alt={`Image ${index + 1}`}
-                                      className="preview-image"
-                                    />
-                                    <Clear
-                                      className="remove-image"
-                                      onClick={() => {
-                                        const updatedImages = images.filter(
-                                          (img) => img.name !== imageUrl.name
-                                        );
-                                        setImages(updatedImages);
-                                        setFieldValue("images", updatedImages);
-                                      }}
-                                    />
-                                  </div>
-                                );
-                              }}
-                            </Draggable>
-                          ))}
-                          {provided.placeholder}
-                        </div>
-                      );
-                    }}
-                  </Droppable>
-                </DragDropContext>
+                <div class="d-flex align-items-center">
+                  <DragDropContext onDragEnd={handleDragEnd}>
+                    <Droppable droppableId="image-preview">
+                      {(provided) => {
+                        return (
+                          <div
+                            className="image-preview"
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}
+                          >
+                            {images.map((imageUrl, index) => (
+                              <Draggable
+                                key={index}
+                                draggableId={index.toString()}
+                                index={index}
+                              >
+                                {(provided) => {
+                                  return (
+                                    <div
+                                      className="image-preview-item"
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      ref={provided.innerRef}
+                                    >
+                                      <img
+                                        src={URL.createObjectURL(imageUrl)}
+                                        alt={`Image ${index + 1}`}
+                                        className="preview-image"
+                                      />
+                                      <Clear
+                                        className="remove-image"
+                                        onClick={() => {
+                                          const updatedImages = images.filter(
+                                            (img) => img.name !== imageUrl.name
+                                          );
+                                          setImages(updatedImages);
+                                          setFieldValue(
+                                            "images",
+                                            updatedImages
+                                          );
+                                        }}
+                                      />
+                                    </div>
+                                  );
+                                }}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </div>
+                        );
+                      }}
+                    </Droppable>
+                  </DragDropContext>
+                  {images.length >= 1 && images.length <= 2 && (
+                    <Button
+                      title="Add more image"
+                      variant="contained"
+                      component="label"
+                      style={{ height: "2rem", marginLeft: "2rem" }}
+                    >
+                      <AddAPhoto />
+                      <input
+                        type="file"
+                        multiple
+                        hidden
+                        accept="image/*"
+                        onChange={(e) => {
+                          const files = Array.from(e.target.files);
+                          const filteredFiles = files.filter(
+                            (file) =>
+                              !images.some((img) => file.name === img.name)
+                          );
+                          const oversizedFiles = filteredFiles.filter(
+                            (file) => file.size <= 3 * 1024 * 1024
+                          );
+                          if (oversizedFiles.length < filteredFiles.length) {
+                            toast.error("Image should be less than 3MB.");
+                            return;
+                          }
+                          setImages((prevImages) => [
+                            ...prevImages,
+                            ...filteredFiles,
+                          ]);
+                          setFieldValue("images", [
+                            ...values.images,
+                            ...filteredFiles,
+                          ]);
+                        }}
+                      />
+                    </Button>
+                  )}
+                </div>
+
                 <p className="mt-2 mb-1 ms-1 text-secondary">
-                  you can only upload upto 3 images.{" "}
+                  you can only upload upto 3 images and Image size must be less
+                  than 3MB.
                 </p>
               </>
 
