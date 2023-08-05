@@ -9,15 +9,24 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { Add, Clear, PhotoCamera } from "@mui/icons-material";
+import {
+  Add,
+  AutoGraphOutlined,
+  Clear,
+  LocationCity,
+  PhotoCamera,
+  ThreeGMobiledata,
+} from "@mui/icons-material";
 import { Toaster, toast } from "react-hot-toast";
 import { SellerContext } from "../../Context/SellerProvider";
 import { FormHelperText, TextareaAutosize } from "@material-ui/core";
 
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 import axios from "axios";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
-const EditProductOverlay = ({ product }) => {
+const EditProductOverlay = ({ product, closeEditProductDialog }) => {
   // ________ Context _______
   const { getSellerProducts } = useContext(SellerContext);
   // __________ States __________
@@ -38,9 +47,9 @@ const EditProductOverlay = ({ product }) => {
     stock: product?.stock,
     pincodes: product?.pincodes,
     colors: product?.colors,
+    featured: true,
     images: product?.images,
-    productDetails:
-      "This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name This is the name ",
+    productDetails: product?.productDetails,
   };
 
   // _____________ Categories ______________
@@ -127,47 +136,35 @@ const EditProductOverlay = ({ product }) => {
     } else {
       values.pincodes = values.pincodes;
     }
-
-    console.log(values);
-    const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("description", values.description);
-    formData.append("price", values.price);
-    formData.append("category", values.category);
-    formData.append("subCategory", values.subCategory);
-    formData.append("discount", values.discount);
-    formData.append("sellingPrice", values.sellingPrice);
-    formData.append("pincodes", values.pincodes);
-    formData.append("productDetails", values.productDetails);
-    formData.append("stock", values.stock);
-    formData.append("tags", values.tags);
-    for (let i = 0; i < values.sizes.length; i++) {
-      formData.append("sizes", values.sizes[i]);
-    }
-    for (let i = 0; i < values.colors.length; i++) {
-      formData.append("colors", values.colors[i]);
-    }
-
+    console.log(values);  
+    const { images, ...body } = values;
     try {
       setLoading(true);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(
+            localStorage.getItem("primepick-seller")
+          )}`,
+        },
+      };
       const res = await axios.put(
-        `${process.env.REACT_APP_SERVER_URL}api/store/updateproduct/${product?._id}`,
-        {
-          body: values,
-          headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("primepick-seller")
-            )}`,
-          },
-        }
+        `${process.env.REACT_APP_SERVER_URL}api/store/updateproduct/${product._id}`,
+        body,
+        config
       );
+      if (res.data.msg === "Product updated successfully.") {
+        toast.success(res.data.msg);
+        getSellerProducts();
+        resetForm();
+        closeEditProductDialog();
+      }
 
-      console.log(res.data);
       setLoading(false);
     } catch (err) {
-      console.log(err.response.data);
+      console.log(err.response.data.msg);
+      toast.error(err.response.data.msg);
       setLoading(false);
-      toast.error("Something went wrong");
     }
   };
   const handleDragEnd = (result) => {
@@ -222,7 +219,10 @@ const EditProductOverlay = ({ product }) => {
                     "border-red px-3"
                   }`}
                   minRows={4}
-                  style={{ borderRadius: "5px", padding: ".5rem .5rem" }}
+                  style={{
+                    borderRadius: "5px",
+                    padding: ".5rem .5rem",
+                  }}
                   maxRows={8}
                   name="description"
                   value={values.description}
@@ -243,24 +243,16 @@ const EditProductOverlay = ({ product }) => {
                 fullWidth
                 error={Boolean(errors.productDetails && touched.productDetails)}
               >
-                <TextareaAutosize
-                  className={`${
-                    errors.productDetails &&
-                    touched.productDetails &&
-                    "border-red px-3"
-                  }`}
-                  minRows={4}
-                  style={{ borderRadius: "5px", padding: ".5rem .5rem" }}
-                  maxRows={8}
-                  placeholder="write details in more than 200 characters"
-                  name="productDetails"
+                <ReactQuill
+                  theme="snow"
                   value={values.productDetails}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  onChange={(content) =>
+                    setFieldValue("productDetails", content)
+                  }
                 />
                 {errors.productDetails && touched.productDetails && (
                   <FormHelperText className="text-danger">
-                    {errors.description}
+                    {errors.productDetails}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -483,7 +475,7 @@ const EditProductOverlay = ({ product }) => {
                       multiple
                       hidden
                       accept="image/*"
-                      onChange={(e) => {
+                      onChange={async (e) => {
                         const files = Array.from(e.target.files);
 
                         const filteredFiles = files.filter(
@@ -498,6 +490,24 @@ const EditProductOverlay = ({ product }) => {
                           ...values.images,
                           ...filteredFiles,
                         ]);
+                        const config = {
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${JSON.parse(
+                              localStorage.getItem("primepick-seller")
+                            )}`,
+                          },
+                        };
+                        try {
+                          const res = await axios.put(
+                            `${process.env.REACT_APP_SERVER_URL}api/store/addproductimage/${product._id}`,
+                            filteredFiles,
+                            config
+                          );
+                          console.log(res.data);
+                        } catch (err) {
+                          console.log(err);
+                        }
                       }}
                     />
                   </Button>
@@ -567,12 +577,34 @@ const EditProductOverlay = ({ product }) => {
                                         cursor: "pointer",
                                         fontSize: "15px",
                                       }}
-                                      onClick={() => {
+                                      onClick={async () => {
                                         const updatedImages = images.filter(
                                           (image) => image !== img
                                         );
                                         setImages(updatedImages);
                                         setFieldValue("images", updatedImages);
+                                        const config = {
+                                          headers: {
+                                            "Content-Type": "application/json",
+                                            Authorization: `Bearer ${JSON.parse(
+                                              localStorage.getItem(
+                                                "primepick-seller"
+                                              )
+                                            )}`,
+                                          },
+                                        };
+
+                                        try {
+                                          const res = await axios.delete(
+                                            `${process.env.REACT_APP_SERVER_URL}api/store/deleteproductimage/${product._id}`,
+                                            {
+                                              config,
+                                            }
+                                          );
+                                          console.log(res.data);
+                                        } catch (err) {
+                                          console.log(err);
+                                        }
                                       }}
                                     />
                                   </div>

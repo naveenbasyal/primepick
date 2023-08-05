@@ -7,7 +7,6 @@ import axios from "axios";
 const SellerContext = createContext();
 
 const SellerProvider = ({ children }) => {
-  const token = getSellerToken();
   const [sellerLogin, setSellerLogin] = useState(
     localStorage.getItem("primepick-seller") ? true : false
   );
@@ -20,7 +19,7 @@ const SellerProvider = ({ children }) => {
     sellerDetailsLoading: false,
   });
   useEffect(() => {
-    if (token) {
+    if (sellerLogin) {
       getSellerData();
       getSellerProducts();
     }
@@ -62,7 +61,9 @@ const SellerProvider = ({ children }) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${JSON.parse(token)}`,
+          Authorization: `Bearer ${JSON.parse(
+            localStorage.getItem("primepick-seller")
+          )}`,
         },
       };
       const res = await axios.get(

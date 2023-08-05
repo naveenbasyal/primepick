@@ -55,7 +55,7 @@ const AllProducts = () => {
       setSellerProducts(
         sellerProducts.filter((product) => product._id !== deleteProductId)
       );
-      console.log(res);
+
       setShowConfirmDelete(false);
       setProductToDelete(null);
       setLoading(false);
@@ -142,10 +142,11 @@ const AllProducts = () => {
         aria-labelledby="edit-dialog-title"
       >
         <DialogTitle id="edit-dialog-title">Edit Product</DialogTitle>
-        <DialogContent style={{width:"600px"}}>
+        <DialogContent style={{ width: "600px" }}>
           <EditProductOverlay
             product={productToEdit}
             setProductToEdit={setProductToEdit}
+            closeEditProductDialog={closeEditProductDialog}
           />
         </DialogContent>
       </Dialog>

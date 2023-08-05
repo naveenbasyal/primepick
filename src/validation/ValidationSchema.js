@@ -93,6 +93,9 @@ const createProductSchema = Yup.object().shape({
     .typeError("Stock must be a number")
     .min(1, "Stock must be greater than 0")
     .required("Stock is required"),
+  productDetails: Yup.string()
+    .min(200, "Product Details must be 100 characters or more")
+    .required("Product Details is required"),
 
   pincode: Yup.string().matches(/^[0-9,]*$/, "Pincode must be a number"),
 

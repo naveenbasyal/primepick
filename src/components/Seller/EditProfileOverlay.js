@@ -38,7 +38,7 @@ const EditProfileOverlay = ({
     },
   });
 
-  //   _______________ Handle Edit Basic Details ______________
+  //   _______________ Handle Edit Basic Details ________________
   const handleEditBasicDetails = async (e) => {
     e.preventDefault();
     try {

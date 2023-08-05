@@ -12,14 +12,15 @@ import {
   Close,
 } from "@material-ui/icons";
 import getToken from "../utils/getToken";
-import sellerToken from "../utils/getSellerToken";
 import { Login } from "@mui/icons-material";
 
 import { SellerContext } from "../Context/SellerProvider";
+import getSellerToken from "../utils/getSellerToken";
 
 const Navbar = () => {
   const { sellerLogin, sellerProfile } = useContext(SellerContext);
   const token = getToken();
+  const sellerToken = getSellerToken();
 
   const searchRef = useRef(null);
   // _____________ States __________________
@@ -347,7 +348,7 @@ const Navbar = () => {
                 <ShoppingCart />
               </Link>
             </li>
-            {sellerLogin && sellerProfile.logo ? (
+            {sellerToken && sellerProfile.logo ? (
               <li className="navUser-item">
                 <Link
                   title="Shop "

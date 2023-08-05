@@ -13,6 +13,8 @@ import { Add, Clear, PhotoCamera } from "@mui/icons-material";
 import { Toaster, toast } from "react-hot-toast";
 import { SellerContext } from "../../Context/SellerProvider";
 import { FormHelperText, TextareaAutosize } from "@material-ui/core";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 
@@ -136,8 +138,6 @@ const CreateProduct = () => {
     formData.append("discount", values.discount);
     formData.append("sellingPrice", values.sellingPrice);
     formData.append("pincodes", values.pincodes);
-    // formData.append("productDetails", values.productDetails);
-
     formData.append("productDetails", values.productDetails);
     formData.append("tags", values.tags);
     for (let i = 0; i < values.sizes.length; i++) {
@@ -258,19 +258,12 @@ const CreateProduct = () => {
                 fullWidth
                 error={Boolean(errors.productDetails && touched.productDetails)}
               >
-                <TextareaAutosize
-                  className={`${
-                    errors.productDetails &&
-                    touched.productDetails &&
-                    "border-red px-3"
-                  }`}
-                  minRows={4}
-                  style={{ borderRadius: "5px", padding: ".5rem .5rem" }}
-                  maxRows={8}
-                  name="productDetails"
+                <ReactQuill
+                  theme="snow"
                   value={values.productDetails}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  onChange={(content) =>
+                    setFieldValue("productDetails", content)
+                  }
                 />
                 {errors.productDetails && touched.productDetails && (
                   <FormHelperText className="text-danger">
@@ -279,6 +272,7 @@ const CreateProduct = () => {
                 )}
               </FormControl>
             </div>
+
             {/* _________ Product Category _________ */}
             <div className="form-field">
               <FormControl fullWidth variant="outlined">

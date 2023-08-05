@@ -222,7 +222,9 @@ const ProductPreview = () => {
             <div className="details ">
               {/* Render content based on the currently selected tab */}
               {currentDetails === "productDetails" ? (
-                <div className="productDetails">{product.description}</div>
+                <div className="productDetails" dangerouslySetInnerHTML={
+                  { __html: product.productDetails }
+                }></div>
               ) : currentDetails === "productReviews" ? (
                 <div className="productReviews">
                   {product.reviews.length > 0 ? (
