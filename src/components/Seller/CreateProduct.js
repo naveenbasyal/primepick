@@ -252,7 +252,7 @@ const CreateProduct = () => {
               </FormControl>
             </div>
             {/* _________ Product Details _________ */}
-            <div className="form-field">
+            <div className="" style={{marginBottom:'10px', zIndex:'10000'}}>
               <InputLabel>Product Details</InputLabel>
               <FormControl
                 fullWidth

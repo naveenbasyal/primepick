@@ -8,7 +8,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Dialog,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
+import { ClipLoader } from "react-spinners";
 import {
   Add,
   AutoGraphOutlined,
@@ -16,10 +20,15 @@ import {
   LocationCity,
   PhotoCamera,
   ThreeGMobiledata,
+  DeleteForeverOutlined,
 } from "@mui/icons-material";
 import { Toaster, toast } from "react-hot-toast";
 import { SellerContext } from "../../Context/SellerProvider";
-import { FormHelperText, TextareaAutosize } from "@material-ui/core";
+import {
+  DialogTitle,
+  FormHelperText,
+  TextareaAutosize,
+} from "@material-ui/core";
 
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 import axios from "axios";
@@ -32,8 +41,12 @@ const EditProductOverlay = ({ product, closeEditProductDialog }) => {
   // __________ States __________
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  const [showImageDelete, setShowImageDelete] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState(product?.images);
+  const [imageToDelete, setImageToDelete] = useState(null);
+  const [imageDeleteLoading, setImageDeleteLoading] = useState(false);
   const initialValues = {
     name: product?.name,
     description: product?.description,
@@ -47,7 +60,7 @@ const EditProductOverlay = ({ product, closeEditProductDialog }) => {
     stock: product?.stock,
     pincodes: product?.pincodes,
     colors: product?.colors,
-    featured: true,
+    featured: product?.featured,
     images: product?.images,
     productDetails: product?.productDetails,
   };
@@ -136,7 +149,8 @@ const EditProductOverlay = ({ product, closeEditProductDialog }) => {
     } else {
       values.pincodes = values.pincodes;
     }
-    console.log(values);  
+
+    console.log(values);
     const { images, ...body } = values;
     try {
       setLoading(true);
@@ -174,6 +188,48 @@ const EditProductOverlay = ({ product, closeEditProductDialog }) => {
     items.splice(result.destination.index, 0, reorderedItem);
     setImages(items);
   };
+
+  const handleDeleteImage = async () => {
+    console.log(imageToDelete);
+    try {
+      setImageDeleteLoading(true);
+      const res = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}api/store/deleteproductimage/${product?._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("primepick-seller")
+            )}`,
+          },
+          body: JSON.stringify({
+            image: imageToDelete,
+          }),
+        }
+      );
+      const data = await res.json();
+      if (data.msg === "Image deleted successfully.") {
+        toast.success(data.msg);
+        getSellerProducts();
+        closeEditProductDialog();
+        setImageToDelete(null);
+        return
+      }
+      else{
+        console.log(data);
+        toast.error(data.msg);
+        setImageDeleteLoading(false);
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error(err);
+      setImageDeleteLoading(false);
+    }
+  };
+
+
+
   return (
     <div className="createProduct my-3 mulish">
       <Toaster />
@@ -469,30 +525,19 @@ const EditProductOverlay = ({ product, closeEditProductDialog }) => {
                     component="label"
                     startIcon={<PhotoCamera />}
                   >
-                    {images.length === 0 ? "Upload Images" : "Upload More?"}
+                    {images.length < 3 && "Add Image"}
                     <input
                       type="file"
-                      multiple
                       hidden
                       accept="image/*"
                       onChange={async (e) => {
-                        const files = Array.from(e.target.files);
+                        const file = e.target.files[0];
 
-                        const filteredFiles = files.filter(
-                          (file) =>
-                            !images.some((img) => file.name === img.name)
-                        );
-                        setImages((prevImages) => [
-                          ...prevImages,
-                          ...filteredFiles,
-                        ]);
-                        setFieldValue("images", [
-                          ...values.images,
-                          ...filteredFiles,
-                        ]);
+                        const formData = new FormData();
+                        formData.append("image", file);
+
                         const config = {
                           headers: {
-                            "Content-Type": "application/json",
                             Authorization: `Bearer ${JSON.parse(
                               localStorage.getItem("primepick-seller")
                             )}`,
@@ -501,10 +546,14 @@ const EditProductOverlay = ({ product, closeEditProductDialog }) => {
                         try {
                           const res = await axios.put(
                             `${process.env.REACT_APP_SERVER_URL}api/store/addproductimage/${product._id}`,
-                            filteredFiles,
+                            formData,
                             config
                           );
                           console.log(res.data);
+                          if(res?.data?.image){
+                            setImages([...images, res.data.image]);
+                            toast.success(res?.data?.msg);
+                          }
                         } catch (err) {
                           console.log(err);
                         }
@@ -517,6 +566,42 @@ const EditProductOverlay = ({ product, closeEditProductDialog }) => {
                   {images.length}
                   {images.length <= 1 ? " image selected" : " images selected"}
                 </span>
+
+                <Dialog
+                  open={showImageDelete}
+                  onClose={() => setShowImageDelete(false)}
+                  aria-labelledby="confirm-dialog-title"
+                >
+                  <DialogTitle id="confirm-dialog-title">
+                    Confirm Delete
+                  </DialogTitle>
+                  <DialogContent>
+                    Are you sure you want to delete this Image?
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={() => setShowImageDelete(false)}
+                      color="primary"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      style={{
+                        width: "5rem",
+                        padding: "0.5rem",
+                      }}
+                      onClick={() => handleDeleteImage(imageToDelete)}
+                      color="primary"
+                      variant="contained"
+                    >
+                      {imageDeleteLoading ? (
+                        <ClipLoader size={20} color="#fff" />
+                      ) : (
+                        "Delete"
+                      )}
+                    </Button>
+                  </DialogActions>
+                </Dialog>
 
                 {/* _________ Image Preview ___________ */}
                 <DragDropContext onDragEnd={handleDragEnd}>
@@ -548,6 +633,22 @@ const EditProductOverlay = ({ product, closeEditProductDialog }) => {
                                     {...provided.dragHandleProps}
                                     ref={provided.innerRef}
                                   >
+                                    {index === 0 && (
+                                      <span
+                                        className="position-absolute"
+                                        style={{
+                                          top: "5px",
+                                          left: "5px",
+                                          backgroundColor: "green",
+                                          color: "#fff",
+                                          borderRadius: "5px",
+                                          padding: "2px",
+                                          fontSize: "12px",
+                                        }}
+                                      >
+                                        Primary
+                                      </span>
+                                    )}
                                     <img
                                       src={img}
                                       alt={`Image ${index + 1}`}
@@ -560,53 +661,39 @@ const EditProductOverlay = ({ product, closeEditProductDialog }) => {
                                         borderRadius: "5px",
                                       }}
                                     />
-                                    <Clear
-                                      className="remove-image position-absolute"
-                                      style={{
-                                        top: "5px",
-                                        right: "5px",
-                                        backgroundColor: "red",
-                                        color: "#fff",
-                                        border: "none",
-                                        borderRadius: "50%",
-                                        width: "20px",
-                                        height: "20px",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        cursor: "pointer",
-                                        fontSize: "15px",
-                                      }}
-                                      onClick={async () => {
-                                        const updatedImages = images.filter(
-                                          (image) => image !== img
-                                        );
-                                        setImages(updatedImages);
-                                        setFieldValue("images", updatedImages);
-                                        const config = {
-                                          headers: {
-                                            "Content-Type": "application/json",
-                                            Authorization: `Bearer ${JSON.parse(
-                                              localStorage.getItem(
-                                                "primepick-seller"
-                                              )
-                                            )}`,
-                                          },
-                                        };
-
-                                        try {
-                                          const res = await axios.delete(
-                                            `${process.env.REACT_APP_SERVER_URL}api/store/deleteproductimage/${product._id}`,
-                                            {
-                                              config,
-                                            }
-                                          );
-                                          console.log(res.data);
-                                        } catch (err) {
-                                          console.log(err);
-                                        }
-                                      }}
-                                    />
+                                    {index !== 0 && (
+                                      <DeleteForeverOutlined
+                                        className="remove-image position-absolute"
+                                        style={{
+                                          top: "5px",
+                                          right: "5px",
+                                          backgroundColor: "red",
+                                          color: "#fff",
+                                          border: "none",
+                                          borderRadius: "50%",
+                                          width: "20px",
+                                          height: "20px",
+                                          display: "flex",
+                                          justifyContent: "center",
+                                          alignItems: "center",
+                                          cursor: "pointer",
+                                          fontSize: "15px",
+                                        }}
+                                        onClick={() => {
+                                          if (images?.length > 1) {
+                                            setShowImageDelete(true);
+                                            setImageToDelete(img);
+                                            return
+                                          } else {
+                                            setShowImageDelete(false);
+                                            toast.error(
+                                              "You must have atleast one image"
+                                            );
+                                            return
+                                          }
+                                        }}
+                                      />
+                                    )}
                                   </div>
                                 );
                               }}
