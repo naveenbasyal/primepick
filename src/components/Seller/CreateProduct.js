@@ -127,8 +127,6 @@ const CreateProduct = () => {
       values.pincodes = values.pincodes.split(",");
     }
 
-    console.log(values);
-
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
@@ -167,7 +165,7 @@ const CreateProduct = () => {
         }
       );
       const data = await res.json();
-      console.log(data);
+
       if (data.msg === "Product created successfully.") {
         toast.success("Product created successfully");
         resetForm();
