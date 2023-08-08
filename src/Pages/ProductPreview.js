@@ -17,7 +17,7 @@ const ProductPreview = () => {
   const [loading, setLoading] = useState(false);
   const [heroImage, setHeroImage] = useState();
   const [selectedImage, setSelectedImage] = useState();
-  const [currentDetails, setCurrentDetails] = useState("sellerInformation");
+  const [currentDetails, setCurrentDetails] = useState("productDetails");
   const [relatedProducts, setRelatedProducts] = useState([]);
 
   // Get the product ID from URL parameters
@@ -136,7 +136,7 @@ const ProductPreview = () => {
               {/* Product Prices */}
               <div className="productPrices fw-bold">
                 <span className="selling fs-5 me-4">
-                  ₹ {product.sellingPrice}
+                  ₹ {parseInt(product.sellingPrice).toFixed(0)}
                 </span>
                 <span className="actual fw-light me-3 text-secondary text-decoration-line-through">
                   ₹{product.price}
@@ -222,9 +222,10 @@ const ProductPreview = () => {
             <div className="details ">
               {/* Render content based on the currently selected tab */}
               {currentDetails === "productDetails" ? (
-                <div className="productDetails" dangerouslySetInnerHTML={
-                  { __html: product.productDetails }
-                }></div>
+                <div
+                  className="productDetails"
+                  dangerouslySetInnerHTML={{ __html: product.productDetails }}
+                ></div>
               ) : currentDetails === "productReviews" ? (
                 <div className="productReviews">
                   {product.reviews.length > 0 ? (

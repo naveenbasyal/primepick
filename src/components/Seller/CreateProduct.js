@@ -252,7 +252,7 @@ const CreateProduct = () => {
               </FormControl>
             </div>
             {/* _________ Product Details _________ */}
-            <div className="form-field">
+            <div className="mb-3 mt-1">
               <InputLabel>Product Details</InputLabel>
               <FormControl
                 fullWidth
@@ -618,7 +618,7 @@ const CreateProduct = () => {
                 </span>
 
                 {/* _________ Image Preview ___________ */}
-                <div class="d-flex align-items-center">
+                <div className="d-flex align-items-center">
                   <DragDropContext onDragEnd={handleDragEnd}>
                     <Droppable droppableId="image-preview">
                       {(provided) => {
